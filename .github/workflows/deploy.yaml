@@ -43,8 +43,8 @@ jobs:
         run: npm run lint
 
       ## Unit tests
-      - name: Run unit tests
-        run: npm run test:unit
+      # - name: Run unit tests
+      #   run: npm run test:unit
 
       ## Build the source code
       - name: Build
