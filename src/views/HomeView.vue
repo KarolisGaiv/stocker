@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getStockData } from '@/api/stock_api'
+import { getStockPrice } from '@/api/stock_api'
 import { ref } from 'vue'
 
 interface StockData {
@@ -14,9 +14,8 @@ interface Result {
 
 const stockInfo = ref<StockData | null>(null)
 
-getStockData('EQNR').then((data: StockData) => {
+getStockPrice('EQNR').then((data: StockData) => {
   stockInfo.value = data
-  console.log(stockInfo.value)
 })
 </script>
 
