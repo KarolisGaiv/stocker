@@ -1,26 +1,43 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { getStockPrice, getStockInformation } from '@/api/stock_api'
+import { getStockPrice, getStockInformation, getStockNews } from '@/api/stock_api'
 
-const stockName = ref('')
-const stockPrice = ref(0)
-const stockDetails = ref()
+interface StockDetails {
+  name: string
+  ticker: string
+  description: string
+  homepage: string
+}
+
+interface StockPriceDetails {
+  results: { o: number }[]
+}
+
+const stockName = ref<string>('')
+const stockPrice = ref<number>(0)
+const stockDetails = ref<StockDetails | null>(null)
+const stockNews = ref([])
 
 async function searchStock() {
-  const price = await getStockPrice(stockName.value.toUpperCase())
+  const price: StockPriceDetails = await getStockPrice(stockName.value.toUpperCase())
   const res = await getStockInformation(stockName.value.toUpperCase())
 
   stockDetails.value = {
     name: res.results.name,
     ticker: res.results.ticker,
     description: res.results.description,
-    homepage: res.results.homepage_url,
-    logo: res.results.branding.icon_url
+    homepage: res.results.homepage_url
   }
 
   stockPrice.value = price.results[0].o
 
   stockName.value = ''
+}
+
+async function getRelatedStockNews() {
+  const data = await getStockNews(stockDetails.value.ticker.toUpperCase())
+  stockNews.value = data.results
+  console.log(stockNews.value)
 }
 </script>
 
@@ -41,6 +58,17 @@ async function searchStock() {
 
     <div class="stock-price" v-if="stockDetails">
       <h4>Price: ${{ stockPrice }}</h4>
+    </div>
+
+    <button @click="getRelatedStockNews">Related News</button>
+    <div class="stock-news" v-if="stockNews.length > 0">
+      <ul>
+        <li v-for="(newsItem, index) in stockNews" :key="index">
+          <h5>{{ newsItem.title }}</h5>
+          <p>{{ newsItem.author }}</p>
+          <a :href="newsItem.article_url" target="_blank">Read More</a>
+        </li>
+      </ul>
     </div>
   </main>
 </template>

@@ -24,4 +24,16 @@ async function getStockInformation(stock: string) {
   }
 }
 
-export { getStockPrice, getStockInformation }
+async function getStockNews(stock: string) {
+  try {
+    const res = await fetch(
+      `https://api.polygon.io/v2/reference/news?ticker=${stock}&apiKey=${api_key}`
+    )
+    return res.json()
+  } catch (err) {
+    console.error('Error fetching data: ', err)
+    return null
+  }
+}
+
+export { getStockPrice, getStockInformation, getStockNews }
