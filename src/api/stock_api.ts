@@ -1,14 +1,11 @@
-const api_key = import.meta.env.STOCK_API_KEY
+const api_key = import.meta.env.VITE_STOCK_API_KEY
 
-async function getStockData(stock: string): Promise<any> {
+async function getStockData(stock: string) {
   try {
-    const res = await fetch(
-      `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock}&apikey=${api_key}`
+    const response = await fetch(
+      `https://api.polygon.io/v2/aggs/ticker/${stock}/prev?adjusted=true&apiKey=${api_key}`
     )
-    if (!res.ok) {
-      throw new Error(`Unable to fetch stock information. status: ${res.status}`)
-    }
-    return res.json()
+    return response.json()
   } catch (error) {
     console.error('Error fetching data: ', error)
     return null
