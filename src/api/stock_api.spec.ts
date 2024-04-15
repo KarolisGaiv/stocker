@@ -1,3 +1,4 @@
+import { skip } from 'node:test'
 import { getStockData } from './stock_api'
 import { describe, expect, vi, it } from 'vitest'
 
@@ -24,4 +25,5 @@ describe('getStockData function ', () => {
       expect.stringContaining(`https://api.polygon.io/v2/aggs/ticker/${stock}/prev?adjusted=true`)
     )
   })
+  it.skip('add test for unsucsessfull fetch attempt')
 })

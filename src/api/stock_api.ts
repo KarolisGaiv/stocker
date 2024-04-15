@@ -13,13 +13,3 @@ async function getStockData(stock: string) {
 }
 
 export { getStockData }
-
-/* 
-https://www.google.com/search?q=do+you+need+unit+test+for+fetch%3F&oq=do+you+need+unit+test+for+fetch%3F&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIKCAIQIRigARiLAzIKCAMQIRigARiLA9IBCDQ5MjhqMWo3qAIAsAIA&sourceid=chrome&ie=UTF-8
-
-
-https://medium.com/fernandodof/how-to-mock-fetch-calls-with-jest-a666ae1e7752
-
-https://medium.com/@razita.afrina/testing-fetch-api-calls-in-react-7f047ac2d220
-
-*/
