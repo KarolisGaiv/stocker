@@ -13,10 +13,16 @@ interface StockPriceDetails {
   results: { o: number }[]
 }
 
+interface NewsItem {
+  title: string
+  author: string
+  article_url: string
+}
+
 const stockName = ref<string>('')
 const stockPrice = ref<number>(0)
 const stockDetails = ref<StockDetails | null>(null)
-const stockNews = ref([])
+const stockNews = ref<NewsItem[]>([])
 
 async function searchStock() {
   const price: StockPriceDetails = await getStockPrice(stockName.value.toUpperCase())
