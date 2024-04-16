@@ -35,6 +35,10 @@ async function searchStock() {
 }
 
 async function getRelatedStockNews() {
+  if (!stockDetails.value) {
+    console.error('No stock details available')
+    return
+  }
   const data = await getStockNews(stockDetails.value.ticker.toUpperCase())
   stockNews.value = data.results
   console.log(stockNews.value)
