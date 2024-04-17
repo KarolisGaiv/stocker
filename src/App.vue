@@ -3,16 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Profile</RouterLink>
-        <RouterLink to="/about">Balance</RouterLink>
-        <RouterLink to="/trade">Trade</RouterLink>
-      </nav>
-    </div>
-  </header>
-
+  <header><h1>Welcome to Stocky App</h1></header>
   <RouterView />
 </template>
 

@@ -80,6 +80,12 @@ async function getRelatedStockNews() {
         </li>
       </ul>
     </div>
+
+    <div class="trade-action-wrapper">
+      <h2>Action</h2>
+      <button>Buy</button>
+      <button>Sell</button>
+    </div>
   </main>
 </template>
 

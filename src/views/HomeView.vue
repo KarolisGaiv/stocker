@@ -14,9 +14,9 @@ interface Result {
 
 const stockInfo = ref<StockData | null>(null)
 
-getStockPrice('EQNR').then((data: StockData) => {
-  stockInfo.value = data
-})
+// getStockPrice('EQNR').then((data: StockData) => {
+//   stockInfo.value = data
+// })
 </script>
 
 <template>
