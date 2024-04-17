@@ -18,6 +18,7 @@ const router = useRouter()
 function login() {
   if (storageService.validateUser(loginForm.value.username, loginForm.value.password)) {
     localStorage.setItem('isLoggedIn', 'true')
+    localStorage.setItem('loggedInUser', loginForm.value.username)
     router.push('/')
   } else {
     alert('Invalid credentials')

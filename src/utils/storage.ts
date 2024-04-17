@@ -1,6 +1,8 @@
 interface User {
   username: string
   password: string
+  balance: number
+  portfolio: any[]
 }
 
 export const storageService = {
@@ -14,7 +16,11 @@ export const storageService = {
    */
   saveUser(user: User): void {
     const users = this.getUsers()
-    users.push(user)
+    users.push({
+      ...user,
+      balance: 0,
+      portfolio: []
+    })
     localStorage.setItem('users', JSON.stringify(users))
   },
 
@@ -26,5 +32,22 @@ export const storageService = {
   validateUser(username: string, password: string): boolean {
     const users = this.getUsers()
     return users.some((user) => user.username === username && user.password === password)
+  },
+
+  getUser(username: string): User | undefined {
+    const users = this.getUsers()
+    return users.find((user) => user.username === username)
+  },
+
+  // Partial makes all User properties optional to be provided
+  updateUser(username: string, updates: Partial<User>): void {
+    const users = this.getUsers()
+    const updatedUsers = users.map((user) => {
+      if (user.username === username) {
+        return { ...user, ...updates }
+      }
+      return user
+    })
+    localStorage.setItem('users', JSON.stringify(updatedUsers))
   }
 }
