@@ -25,7 +25,12 @@ function register() {
     return
   }
 
-  storageService.saveUser({ username: form.value.username, password: form.value.password })
+  storageService.saveUser({
+    username: form.value.username,
+    password: form.value.password,
+    balance: 0,
+    portfolio: []
+  })
   alert('Registration successful')
   router.push('/login')
 }

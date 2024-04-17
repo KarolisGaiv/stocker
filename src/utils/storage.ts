@@ -16,11 +16,7 @@ export const storageService = {
    */
   saveUser(user: User): void {
     const users = this.getUsers()
-    users.push({
-      ...user,
-      balance: 0,
-      portfolio: []
-    })
+    users.push(user)
     localStorage.setItem('users', JSON.stringify(users))
   },
 
