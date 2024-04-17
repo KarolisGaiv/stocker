@@ -1,5 +1,5 @@
 import { skip } from 'node:test'
-import { getStockData } from './stock_api'
+import { getStockPrice } from './stock_api'
 import { describe, expect, vi, it } from 'vitest'
 
 global.fetch = vi.fn()
@@ -10,14 +10,14 @@ const MOCK_STOCK = {
   status: 'OK'
 }
 
-describe('getStockData function ', () => {
-  it('fetches stock data successfully', async () => {
+describe('getStockPrice function ', () => {
+  it('fetches stock price successfully', async () => {
     vi.mocked(fetch).mockResolvedValue({
       json: () => Promise.resolve(MOCK_STOCK)
     } as Response)
 
     const stock = 'MCKD'
-    const stockData = await getStockData(stock)
+    const stockData = await getStockPrice(stock)
 
     expect(stockData).toEqual(MOCK_STOCK)
 
