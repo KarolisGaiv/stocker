@@ -21,5 +21,10 @@ export const storageService = {
   doesUserExists(username: string): boolean {
     const users = this.getUsers()
     return users.some((user) => user.username === username)
+  },
+
+  validateUser(username: string, password: string): boolean {
+    const users = this.getUsers()
+    return users.some((user) => user.username === username && user.password === password)
   }
 }
