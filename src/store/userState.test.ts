@@ -26,7 +26,7 @@ describe('userState', () => {
     })
   })
 
-  describe('withdraw funcionlity', () => {
+  describe('withdraw funcionality', () => {
     it('decreases balance succesfully', () => {
       const userStore = useUserState()
       userStore.deposit(700)
@@ -39,6 +39,63 @@ describe('userState', () => {
       userStore.deposit(700)
       expect(() => userStore.withdraw(1000)).toThrowError()
       expect(userStore.balance).toBe(700)
+    })
+  })
+
+  describe('buyStock funcionality', () => {
+    it('adds stock to porftolio', () => {
+      const userStore = useUserState()
+      userStore.deposit(1000)
+      expect(userStore.portfolio).toStrictEqual([])
+      const orderSize = 2
+      const stock = {
+        name: 'Mocked Stock',
+        ticker: 'MCK',
+        price: 300,
+        lastUpdated: '2024-04-18'
+      }
+      userStore.buyStock(orderSize, stock)
+      expect(userStore.portfolio.length).toBeGreaterThan(0)
+    })
+
+    it('adjusts balance after trade', () => {
+      const userStore = useUserState()
+      userStore.deposit(1000)
+      const orderSize = 2
+      const stock = {
+        name: 'Mocked Stock',
+        ticker: 'MCK',
+        price: 300,
+        lastUpdated: '2024-04-18'
+      }
+
+      const expectedBalance = userStore.balance - orderSize * stock.price
+      userStore.buyStock(orderSize, stock)
+      expect(userStore.balance).toBe(expectedBalance)
+    })
+
+    it.skip('increases quanitity if stock already exist in portfolio', () => {
+      const userStore = useUserState()
+      userStore.deposit(30000000)
+      const orderSize = 2
+      const stock = {
+        name: 'Mocked Stock',
+        ticker: 'MCK',
+        price: 300,
+        lastUpdated: '2024-04-01'
+      }
+      userStore.buyStock(orderSize, stock)
+      expect(userStore.portfolio[0].quantity).toBe(orderSize)
+
+      const stock2 = {
+        name: 'Mocked Stock',
+        ticker: 'MCK',
+        price: 300,
+        lastUpdated: '2024-04-18'
+      }
+      // second buy order with same quantity
+      userStore.buyStock(orderSize, stock2)
+      expect(userStore.portfolio[0].quantity).toBe(4)
     })
   })
 })

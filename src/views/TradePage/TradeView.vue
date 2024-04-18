@@ -23,6 +23,7 @@ const stockName = ref<string>('')
 const stockPrice = ref<number>(0)
 const stockDetails = ref<StockDetails | null>(null)
 const stockNews = ref<NewsItem[]>([])
+const quantity = ref<number>(0)
 
 async function searchStock() {
   const price: StockPriceDetails = await getStockPrice(stockName.value.toUpperCase())
@@ -83,6 +84,8 @@ async function getRelatedStockNews() {
 
     <div class="trade-action-wrapper">
       <h2>Action</h2>
+      <label for="quantity">Enter quantity:</label>
+      <input type="number" id="quanitity" v-model="quantity" />
       <button>Buy</button>
       <button>Sell</button>
     </div>

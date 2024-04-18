@@ -11,6 +11,7 @@ interface Stock {
   name: string
   price: number
   lastUpdated: string
+  quantity: number
 }
 
 export const useUserState = defineStore('user', {
@@ -47,6 +48,19 @@ export const useUserState = defineStore('user', {
       } else {
         throw new Error('Insufficient balance')
       }
+    },
+
+    buyStock(quantity: number, stockInfo: Stock) {
+      const trade = {
+        name: stockInfo.name,
+        ticker: stockInfo.ticker,
+        purchase_price: stockInfo.price,
+        quantity,
+        lastUpdated: stockInfo.lastUpdated
+      }
+
+      this.portfolio.push(trade)
+      this.balance -= quantity * trade.purchase_price
     }
   }
 })
