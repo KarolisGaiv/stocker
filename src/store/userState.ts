@@ -51,6 +51,12 @@ export const useUserState = defineStore('user', {
     },
 
     buyStock(orderQuantity: number, orderInfo: Stock) {
+      const totalOrderPrice = orderQuantity * orderInfo.price
+
+      if (totalOrderPrice > this.balance) {
+        throw new Error('Insufficient balance')
+      }
+
       const existingStockIndex = this.portfolio.findIndex(
         (stock) => stock.ticker === orderInfo.ticker
       )
@@ -76,6 +82,8 @@ export const useUserState = defineStore('user', {
       }
       this.balance -= orderQuantity * orderInfo.price
       this.updateUser({ balance: this.balance, portfolio: this.portfolio })
-    }
+    },
+
+    sellStock(orderQuantity: number, orderInfo: Stock) {}
   }
 })

@@ -147,5 +147,33 @@ describe('userState', () => {
 
       expect(userStore.portfolio[0].purchase_price).toBeCloseTo(avgPurchasePrice)
     })
+
+    it('does not allow to buy more than available balance', () => {
+      const userStore = useUserState()
+      userStore.deposit(1000)
+      const stock = {
+        name: 'Mocked Stock',
+        ticker: 'MCK',
+        price: 300,
+        lastUpdated: '2024-04-01'
+      }
+      expect(() => userStore.buyStock(1000, stock)).toThrowError()
+    })
+  })
+
+  describe.skip('sell stock function', () => {
+    it('increases balance after selling stock', () => {
+      const userStore = useUserState()
+      userStore.deposit(1000)
+      const orderSize = 2
+      const stock = {
+        name: 'Mocked Stock',
+        ticker: 'MCK',
+        price: 300,
+        lastUpdated: '2024-04-14'
+      }
+
+      userStore.buyStock(orderSize, stock)
+    })
   })
 })
