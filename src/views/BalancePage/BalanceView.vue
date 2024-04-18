@@ -19,7 +19,8 @@ function handleTransaction(type: string): void {
     }
     amount.value = 0
   } catch (error) {
-    alert(error.message)
+    const errorMsg = (error as Error).message
+    alert(errorMsg)
   }
 }
 </script>
