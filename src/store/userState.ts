@@ -50,17 +50,25 @@ export const useUserState = defineStore('user', {
       }
     },
 
-    buyStock(quantity: number, stockInfo: Stock) {
-      const trade = {
-        name: stockInfo.name,
-        ticker: stockInfo.ticker,
-        purchase_price: stockInfo.price,
-        quantity,
-        lastUpdated: stockInfo.lastUpdated
-      }
+    buyStock(orderQuantity: number, orderInfo: Stock) {
+      const existingStockIndex = this.portfolio.findIndex(
+        (stock) => stock.ticker === orderInfo.ticker
+      )
 
-      this.portfolio.push(trade)
-      this.balance -= quantity * trade.purchase_price
+      // if stock already exist in portfolio update quantity
+      if (existingStockIndex !== -1) {
+        this.portfolio[existingStockIndex].quantity += orderQuantity
+      } else {
+        const trade = {
+          name: orderInfo.name,
+          ticker: orderInfo.ticker,
+          purchase_price: orderInfo.price,
+          quantity: orderQuantity,
+          lastUpdated: orderInfo.lastUpdated
+        }
+        this.portfolio.push(trade)
+      }
+      this.balance -= orderQuantity * orderInfo.price
     }
   }
 })

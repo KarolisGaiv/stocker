@@ -74,7 +74,7 @@ describe('userState', () => {
       expect(userStore.balance).toBe(expectedBalance)
     })
 
-    it.skip('increases quanitity if stock already exist in portfolio', () => {
+    it('increases quanitity if stock already exist in portfolio', () => {
       const userStore = useUserState()
       userStore.deposit(30000000)
       const orderSize = 2
@@ -87,14 +87,7 @@ describe('userState', () => {
       userStore.buyStock(orderSize, stock)
       expect(userStore.portfolio[0].quantity).toBe(orderSize)
 
-      const stock2 = {
-        name: 'Mocked Stock',
-        ticker: 'MCK',
-        price: 300,
-        lastUpdated: '2024-04-18'
-      }
-      // second buy order with same quantity
-      userStore.buyStock(orderSize, stock2)
+      userStore.buyStock(orderSize, stock)
       expect(userStore.portfolio[0].quantity).toBe(4)
     })
   })
