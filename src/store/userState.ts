@@ -10,6 +10,7 @@ interface Stock {
   ticker: string
   name: string
   price: number
+  purchase_price: number
   lastUpdated: string
   quantity: number
 }
@@ -74,6 +75,7 @@ export const useUserState = defineStore('user', {
         const trade = {
           name: orderInfo.name,
           ticker: orderInfo.ticker,
+          price: orderInfo.price,
           purchase_price: orderInfo.price,
           quantity: orderQuantity,
           lastUpdated: orderInfo.lastUpdated
@@ -84,6 +86,18 @@ export const useUserState = defineStore('user', {
       this.updateUser({ balance: this.balance, portfolio: this.portfolio })
     },
 
-    sellStock(orderQuantity: number, orderInfo: Stock) {}
+    sellStock(orderQuantity: number, orderInfo: Stock) {
+      const existingStockIndex = this.portfolio.findIndex(
+        (stock) => stock.ticker === orderInfo.ticker
+      )
+
+      if (existingStockIndex === -1) {
+        throw new Error('Stock not found in portfolio')
+      }
+
+      if (orderQuantity > this.portfolio[existingStockIndex].quantity) {
+        throw new Error('Cannot sell more than currently have')
+      }
+    }
   }
 })

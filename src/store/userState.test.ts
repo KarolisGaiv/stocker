@@ -162,18 +162,28 @@ describe('userState', () => {
   })
 
   describe.skip('sell stock function', () => {
-    it('increases balance after selling stock', () => {
+    it('does not allow to sell stocks which are not in portfolio', () => {
+      const userStore = useUserState()
+      const stock = {
+        ticker: 'MCK'
+      }
+      expect(() => userStore.sellStock(2, stock)).toThrowError()
+    })
+
+    it('does not allow to sell more stocks than user holds in portfolio', () => {
       const userStore = useUserState()
       userStore.deposit(1000)
-      const orderSize = 2
       const stock = {
         name: 'Mocked Stock',
         ticker: 'MCK',
         price: 300,
-        lastUpdated: '2024-04-14'
+        lastUpdated: '2024-04-01'
       }
+      userStore.buyStock(2, stock)
+      expect(userStore.portfolio[0].quantity).toBe(2)
 
-      userStore.buyStock(orderSize, stock)
+      expect(() => userStore.sellStock(10, stock)).toThrowError()
+      expect(userStore.portfolio[0].quantity).toBe(2)
     })
   })
 })

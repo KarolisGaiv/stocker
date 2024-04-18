@@ -7,7 +7,9 @@ interface Stock {
   ticker: string
   name: string
   price: number
+  purchase_price: number
   lastUpdated: string
+  quantity: number
 }
 
 export const storageService = {
