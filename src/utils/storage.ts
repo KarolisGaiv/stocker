@@ -1,49 +1,28 @@
 interface User {
-  username: string
-  password: string
   balance: number
-  portfolio: any[]
+  portfolio: Stock[]
+}
+
+interface Stock {
+  ticker: string
+  name: string
+  price: number
+  lastUpdated: string
 }
 
 export const storageService = {
-  getUsers(): User[] {
-    return JSON.parse(localStorage.getItem('users') || '[]')
+  getUser(): User {
+    return JSON.parse(localStorage.getItem('user') || '{"balance": 0, "portfolio": []}')
   },
 
-  /**
-   * Save a new user to localStorage
-   * @param user The user object to store
-   */
   saveUser(user: User): void {
-    const users = this.getUsers()
-    users.push(user)
-    localStorage.setItem('users', JSON.stringify(users))
+    localStorage.setItem('user', JSON.stringify(user))
   },
 
-  doesUserExists(username: string): boolean {
-    const users = this.getUsers()
-    return users.some((user) => user.username === username)
-  },
-
-  validateUser(username: string, password: string): boolean {
-    const users = this.getUsers()
-    return users.some((user) => user.username === username && user.password === password)
-  },
-
-  getUser(username: string): User | undefined {
-    const users = this.getUsers()
-    return users.find((user) => user.username === username)
-  },
-
-  // Partial makes all User properties optional to be provided
-  updateUser(username: string, updates: Partial<User>): void {
-    const users = this.getUsers()
-    const updatedUsers = users.map((user) => {
-      if (user.username === username) {
-        return { ...user, ...updates }
-      }
-      return user
-    })
-    localStorage.setItem('users', JSON.stringify(updatedUsers))
+  // Partial here makes User attributes optional
+  updateUser(updates: Partial<User>): void {
+    const user = this.getUser()
+    const updatedUser = { ...user, ...updates }
+    this.saveUser(updatedUser)
   }
 }

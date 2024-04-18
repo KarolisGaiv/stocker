@@ -1,28 +1,52 @@
-import { reactive } from 'vue'
+import { defineStore } from 'pinia'
 import { storageService } from '@/utils/storage'
 
 interface User {
-  username: string
   balance: number
-  portfolio: any[]
+  portfolio: Stock[]
 }
 
-function loadInitialState(): User {
-  const loggedUser = localStorage.getItem('loggedInUser')
-  const userDetails = loggedUser ? storageService.getUser(loggedUser) : null
-  return {
-    username: userDetails?.username ?? '',
-    balance: userDetails?.balance ?? 0,
-    portfolio: userDetails?.portfolio ?? []
+interface Stock {
+  ticker: string
+  name: string
+  price: number
+  lastUpdated: string
+}
+
+export const useUserState = defineStore('user', {
+  state: (): User => {
+    return {
+      balance: 0,
+      portfolio: []
+    }
+  },
+
+  actions: {
+    loadUser() {
+      const user = storageService.getUser()
+      if (user) {
+        this.balance = user.balance
+        this.portfolio = user.portfolio
+      }
+    },
+
+    updateUser(updates: Partial<User>) {
+      storageService.updateUser(updates)
+      this.loadUser() // reload user to show updates
+    },
+
+    deposit(amount: number) {
+      if (amount > 0) {
+        this.updateUser({ balance: this.balance + amount })
+      }
+    },
+
+    withdraw(amount: number) {
+      if (amount > 0 && amount <= this.balance) {
+        this.updateUser({ balance: this.balance - amount })
+      } else {
+        throw new Error('Insufficient balance')
+      }
+    }
   }
-}
-
-const userState = reactive<User>(loadInitialState())
-
-function updateUserState() {
-  Object.assign(userState, loadInitialState())
-}
-
-export function useUserState() {
-  return { userState, updateUserState }
-}
+})

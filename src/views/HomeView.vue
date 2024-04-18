@@ -1,31 +1,7 @@
-<script setup lang="ts">
-import { getStockPrice } from '@/api/stock_api'
-import { ref } from 'vue'
-
-interface StockData {
-  ticker: string
-  results: Result[]
-  status: string
-}
-
-interface Result {
-  o: number
-}
-
-const stockInfo = ref<StockData | null>(null)
-
-// getStockPrice('EQNR').then((data: StockData) => {
-//   stockInfo.value = data
-// })
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <main>
-    <h1>This is a test</h1>
-    <h2 v-if="stockInfo && stockInfo.ticker">
-      {{ stockInfo.ticker }}
-      <h3>Price: {{ stockInfo.results[0].o }}</h3>
-    </h2>
-    <p v-else>Loading stock information or no data available...</p>
+    <h1>This is A "Home View"</h1>
   </main>
 </template>

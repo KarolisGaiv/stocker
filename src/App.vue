@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header><h1>Welcome to Stocky App</h1></header>
+  <header><h1>HEADER PLACEHOLDER</h1></header>
   <RouterView />
 </template>
 
@@ -11,6 +11,7 @@ import { RouterLink, RouterView } from 'vue-router'
 header {
   line-height: 1.5;
   max-height: 100vh;
+  margin-bottom: 2rem;
 }
 
 .logo {
