@@ -55,9 +55,15 @@ export const useUserState = defineStore('user', {
         (stock) => stock.ticker === orderInfo.ticker
       )
 
-      // if stock already exist in portfolio update quantity
+      // if stock already exist in portfolio update quantity and purchase price
       if (existingStockIndex !== -1) {
-        this.portfolio[existingStockIndex].quantity += orderQuantity
+        const existingStock = this.portfolio[existingStockIndex]
+        const oldTotalCost = existingStock.purchase_price * existingStock.quantity
+        const newTotalCost = oldTotalCost + orderInfo.price * orderQuantity
+        existingStock.quantity += orderQuantity
+
+        existingStock.purchase_price = newTotalCost / existingStock.quantity
+        existingStock.lastUpdated = orderInfo.lastUpdated
       } else {
         const trade = {
           name: orderInfo.name,
@@ -69,6 +75,7 @@ export const useUserState = defineStore('user', {
         this.portfolio.push(trade)
       }
       this.balance -= orderQuantity * orderInfo.price
+      this.updateUser({ balance: this.balance, portfolio: this.portfolio })
     }
   }
 })
