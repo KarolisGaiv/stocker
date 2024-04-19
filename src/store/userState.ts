@@ -113,19 +113,25 @@ export const useUserState = defineStore('user', {
       this.updateUser({ balance: this.balance, portfolio: this.portfolio })
     },
 
-    async updatePortfolioPrices() {
+    async updatePortfolioPrices(): Promise<void> {
+      const today = format(new Date(), 'yyyy-MM-dd')
+
       for (const stock of this.portfolio) {
-        const lastUpdateDate = parse(stock.lastUpdated, 'yyyy-MM-dd', new Date())
-        if (!isToday(lastUpdateDate)) {
-          const updatedStockPrice = await getStockPrice(stock.ticker)
-          if (updatedStockPrice && updatedStockPrice.results) {
-            stock.price = updatedStockPrice.results[0].c
-            stock.lastUpdated = format(new Date(), 'yyyy-MM-dd')
+        if (stock.lastUpdated < today) {
+          try {
+            const response = await getStockPrice(stock.ticker)
+            if (response && response.status === 'OK' && response.results.length > 0) {
+              const newPrice = response.results[0].o
+              stock.price = newPrice
+              stock.lastUpdated = today
+            } else {
+              console.error('No valid data for stock')
+            }
+          } catch {
+            console.error(`Failed to update stock price for ${stock.name}`)
           }
-          await new Promise((resolve) => setTimeout(resolve, 12000))
         }
       }
-      this.updateUser({ portfolio: this.portfolio })
     }
   }
 })

@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useUserState } from './userState'
+import { format, subDays } from 'date-fns'
+import * as stock_api from '../api/stock_api'
 
 interface Stock {
   name: string
@@ -187,6 +189,44 @@ describe('userState', () => {
 
       userStore.sellStock(1, { ...stockFixture })
       expect(userStore.balance).toBe(700)
+    })
+  })
+
+  describe('updatePortfolioPrices function', () => {
+    it('updates prices for stocks not updated today', async () => {
+      const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd')
+      const today = format(new Date(), 'yyyy-MM-dd')
+
+      const stockUpdatedYesterday = {
+        ...stockFixture,
+        lastUpdated: yesterday,
+        price: 250
+      }
+
+      const stockUpdatedToday = {
+        ...stockFixture,
+        lastUpdated: today
+      }
+
+      userStore.portfolio = [stockUpdatedYesterday, stockUpdatedToday]
+
+      //mock api call that fetches stock price
+      const mockApiResponse = {
+        status: 'OK',
+        results: [{ o: 420 }]
+      }
+
+      vi.spyOn(stock_api, 'getStockPrice').mockResolvedValue(mockApiResponse)
+
+      await userStore.updatePortfolioPrices()
+
+      // check if stockUpdatedYesterday object was updated
+      expect(userStore.portfolio[0].price).toBe(420)
+      expect(userStore.portfolio[0].lastUpdated).toBe(today)
+
+      // check if stockUpdatedToday object was not updated
+      expect(userStore.portfolio[1].price).toBe(300)
+      expect(userStore.portfolio[1].lastUpdated).toBe(today)
     })
   })
 })

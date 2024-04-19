@@ -29,6 +29,7 @@ const userState = useUserState()
 
 async function searchStock() {
   const price: StockPriceDetails = await getStockPrice(stockName.value.toUpperCase())
+  console.log(price)
   const res = await getStockInformation(stockName.value.toUpperCase())
 
   stockDetails.value = {
