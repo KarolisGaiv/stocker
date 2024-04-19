@@ -32,24 +32,27 @@ const portfolioFixture = [
   }
 ]
 
-const singleStockPortfolioFixture = [
-  {
-    name: 'Mocked Stock',
-    ticker: 'MCK',
-    price: 100,
-    purchase_price: 300,
-    quantity: 2,
-    lastUpdated: '2024-04-03'
-  }
-]
+const singleStockFixture = {
+  name: 'Mocked Stock',
+  ticker: 'MCK',
+  price: 100,
+  purchase_price: 300,
+  quantity: 2,
+  lastUpdated: '2024-04-03'
+}
 
 describe('calculateTotalInvested function', () => {
-  it('correctly calculates single stock portfolio', () => {
-    const total = calculateTotalInvested(singleStockPortfolioFixture)
+  it('correctly calculates for a single stock object', () => {
+    const total = calculateTotalInvested(singleStockFixture)
     expect(total).toBe(600)
   })
 
-  it('correctly calculates total amount invested based on stock purchase price and quantities for multiple stock portfolio', () => {
+  it('correctly calculates for a single stock portfolio', () => {
+    const total = calculateTotalInvested([singleStockFixture])
+    expect(total).toBe(600)
+  })
+
+  it('correctly calculates total amount invested for multiple stock portfolio', () => {
     const totalInvested = 300 * 2 + 300 * 5 + 300 * 10
     const total = calculateTotalInvested(portfolioFixture)
     expect(total).toBe(totalInvested)
@@ -63,12 +66,17 @@ describe('calculateTotalInvested function', () => {
 })
 
 describe('calculateCurrentValue function', () => {
-  it('correctly calculates single stock portfolio', () => {
-    const total = calculateCurrentValue(singleStockPortfolioFixture)
+  it('correctly calculates for a single stock', () => {
+    const total = calculateCurrentValue(singleStockFixture)
     expect(total).toBe(200)
   })
 
-  it('correctly calculates current value of multiple stock portfolio', () => {
+  it('correctly calculates single stock portfolio', () => {
+    const total = calculateCurrentValue(singleStockFixture)
+    expect(total).toBe(200)
+  })
+
+  it('correctly calculates current value of multiple stocks portfolio', () => {
     const correctValue = 100 * 2 + 400 * 5 + 3000 * 10
     const total = calculateCurrentValue(portfolioFixture)
     expect(total).toBe(correctValue)
