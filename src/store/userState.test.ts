@@ -1,10 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useUserState } from './userState'
-import exp from 'constants'
 
 describe('userState', () => {
-  let userStore
+  let userStore: ReturnType<typeof useUserState>
 
   beforeEach(() => {
     setActivePinia(createPinia())

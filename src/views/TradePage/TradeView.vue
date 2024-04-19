@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { getStockPrice, getStockInformation, getStockNews } from '@/api/stock_api'
+import { useUserState } from '@/store/userState'
+import { format } from 'date-fns'
 
 interface StockDetails {
   name: string
@@ -18,12 +20,12 @@ interface NewsItem {
   author: string
   article_url: string
 }
-
 const stockName = ref<string>('')
 const stockPrice = ref<number>(0)
 const stockDetails = ref<StockDetails | null>(null)
 const stockNews = ref<NewsItem[]>([])
 const quantity = ref<number>(0)
+const userState = useUserState()
 
 async function searchStock() {
   const price: StockPriceDetails = await getStockPrice(stockName.value.toUpperCase())
@@ -49,6 +51,29 @@ async function getRelatedStockNews() {
   const data = await getStockNews(stockDetails.value.ticker.toUpperCase())
   stockNews.value = data.results
   console.log(stockNews.value)
+}
+
+async function buyStock() {
+  if (!stockDetails.value || quantity.value <= 0) {
+    alert('Please check the stock details and quantity')
+    return
+  }
+
+  try {
+    const stockToBuy = {
+      name: stockDetails.value.name,
+      ticker: stockDetails.value.ticker,
+      price: stockPrice.value,
+      purchase_price: stockPrice.value,
+      quantity: quantity.value,
+      lastUpdated: format(new Date(), 'yyyy-MM-dd')
+    }
+
+    userState.buyStock(quantity.value, stockToBuy)
+    alert('Purchase sucessfull')
+  } catch (error) {
+    alert(`Error: $(error.message)`)
+  }
 }
 </script>
 
@@ -86,7 +111,7 @@ async function getRelatedStockNews() {
       <h2>Action</h2>
       <label for="quantity">Enter quantity:</label>
       <input type="number" id="quanitity" v-model="quantity" />
-      <button>Buy</button>
+      <button @click="buyStock">Buy</button>
       <button>Sell</button>
     </div>
   </main>
