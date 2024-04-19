@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { storageService } from '@/utils/storage'
+import { getStockPrice } from '@/api/stock_api'
+import { isToday, parse, format } from 'date-fns'
 
 interface User {
   balance: number
@@ -109,6 +111,21 @@ export const useUserState = defineStore('user', {
       this.balance += orderQuantity * orderInfo.price
       this.balance = parseFloat(this.balance.toFixed(2))
       this.updateUser({ balance: this.balance, portfolio: this.portfolio })
+    },
+
+    async updatePortfolioPrices() {
+      for (const stock of this.portfolio) {
+        const lastUpdateDate = parse(stock.lastUpdated, 'yyyy-MM-dd', new Date())
+        if (!isToday(lastUpdateDate)) {
+          const updatedStockPrice = await getStockPrice(stock.ticker)
+          if (updatedStockPrice && updatedStockPrice.results) {
+            stock.price = updatedStockPrice.results[0].c
+            stock.lastUpdated = format(new Date(), 'yyyy-MM-dd')
+          }
+          await new Promise((resolve) => setTimeout(resolve, 12000))
+        }
+      }
+      this.updateUser({ portfolio: this.portfolio })
     }
   }
 })
