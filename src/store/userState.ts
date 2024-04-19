@@ -83,6 +83,7 @@ export const useUserState = defineStore('user', {
         this.portfolio.push(trade)
       }
       this.balance -= orderQuantity * orderInfo.price
+      this.balance = parseFloat(this.balance.toFixed(2))
       this.updateUser({ balance: this.balance, portfolio: this.portfolio })
     },
 
@@ -106,6 +107,7 @@ export const useUserState = defineStore('user', {
       }
 
       this.balance += orderQuantity * orderInfo.price
+      this.balance = parseFloat(this.balance.toFixed(2))
       this.updateUser({ balance: this.balance, portfolio: this.portfolio })
     }
   }
