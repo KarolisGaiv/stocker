@@ -14,3 +14,7 @@ export function calculateTotalInvested(portfolio: Stock[]): number {
 export function calculateCurrentValue(portfolio: Stock[]): number {
   return portfolio.reduce((total, stock) => total + stock.price * stock.quantity, 0)
 }
+
+export function calculatePortfolioReturn(currentValue: number, investedValue: number): number {
+  return ((currentValue - investedValue) / investedValue) * 100
+}

@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { calculateTotalInvested, calculateCurrentValue } from './portfolio'
+import {
+  calculateTotalInvested,
+  calculateCurrentValue,
+  calculatePortfolioReturn
+} from './portfolio'
 
 const portfolioFixture = [
   {
@@ -74,5 +78,31 @@ describe('calculateCurrentValue function', () => {
     const portfolio: any[] = []
     const total = calculateCurrentValue(portfolio)
     expect(total).toBe(0)
+  })
+})
+
+describe('calculatePortfolioReturn function', () => {
+  it('correctly calculates positive portfolio returns', () => {
+    const investedValue = 10000
+    const currentValue = 12000
+    const expectedReturn = ((12000 - 10000) / 10000) * 100
+    const calculatedReturn = calculatePortfolioReturn(currentValue, investedValue)
+    expect(calculatedReturn).toBe(expectedReturn)
+  })
+
+  it('correctly calculates negative portfolio returns', () => {
+    const investedValue = 10000
+    const currentValue = 8000
+    const expectedReturn = ((8000 - 10000) / 10000) * 100
+    const calculatedReturn = calculatePortfolioReturn(currentValue, investedValue)
+    expect(calculatedReturn).toBe(expectedReturn)
+  })
+
+  it('calculates zero return when current value equals invested value', () => {
+    const investedValue = 10000
+    const currentValue = 10000
+    const expectedReturn = ((10000 - 10000) / 10000) * 100
+    const calculatedReturn = calculatePortfolioReturn(currentValue, investedValue)
+    expect(calculatedReturn).toBe(expectedReturn)
   })
 })
