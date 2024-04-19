@@ -10,3 +10,7 @@ interface Stock {
 export function calculateTotalInvested(portfolio: Stock[]): number {
   return portfolio.reduce((total, stock) => total + stock.purchase_price * stock.quantity, 0)
 }
+
+export function calculateCurrentValue(portfolio: Stock[]): number {
+  return portfolio.reduce((total, stock) => total + stock.price * stock.quantity, 0)
+}
