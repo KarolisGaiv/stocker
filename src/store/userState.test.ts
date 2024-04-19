@@ -157,5 +157,13 @@ describe('userState', () => {
       expect(() => userStore.sellStock(10, { ...stockFixture })).toThrowError()
       expect(userStore.portfolio[0].quantity).toBe(2)
     })
+
+    it('subtracts necessary quantity from portoflio', () => {
+      const userStore = useUserState()
+      userStore.deposit(50000)
+      userStore.buyStock(10, { ...stockFixture })
+      userStore.sellStock(5, { ...stockFixture })
+      expect(userStore.portfolio[0].quantity).toBe(10 - 5)
+    })
   })
 })

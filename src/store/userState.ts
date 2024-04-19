@@ -98,6 +98,10 @@ export const useUserState = defineStore('user', {
       if (orderQuantity > this.portfolio[existingStockIndex].quantity) {
         throw new Error('Cannot sell more than currently have')
       }
+
+      this.portfolio[existingStockIndex].quantity -= orderQuantity
+
+      this.updateUser({ portfolio: this.portfolio })
     }
   }
 })
