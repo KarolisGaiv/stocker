@@ -16,7 +16,8 @@ interface Stock {
 export function calculateTotalInvested(input: Stock | Stock[]): number {
   // check if input is an array. If not, wrap input in array
   const stocks = Array.isArray(input) ? input : [input]
-  return stocks.reduce((total, stock) => total + stock.purchase_price * stock.quantity, 0)
+  const total = stocks.reduce((total, stock) => total + stock.purchase_price * stock.quantity, 0)
+  return parseFloat(total.toFixed(2))
 }
 
 /**
@@ -27,9 +28,11 @@ export function calculateTotalInvested(input: Stock | Stock[]): number {
  */
 export function calculateCurrentValue(input: Stock | Stock[]): number {
   const stocks = Array.isArray(input) ? input : [input]
-  return stocks.reduce((total, stock) => total + stock.price * stock.quantity, 0)
+  const total = stocks.reduce((total, stock) => total + stock.price * stock.quantity, 0)
+  return parseFloat(total.toFixed(2))
 }
 
 export function calculatePortfolioReturn(currentValue: number, investedValue: number): number {
-  return ((currentValue - investedValue) / investedValue) * 100
+  const result = ((currentValue - investedValue) / investedValue) * 100
+  return parseFloat(result.toFixed(2))
 }
