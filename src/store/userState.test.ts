@@ -2,6 +2,15 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useUserState } from './userState'
 
+interface Stock {
+  name: string
+  ticker: string
+  price: number
+  purchase_price: number
+  quantity: number
+  lastUpdated: string
+}
+
 describe('userState', () => {
   let userStore: ReturnType<typeof useUserState>
 
@@ -70,6 +79,8 @@ describe('userState', () => {
         name: 'Mocked Stock',
         ticker: 'MCK',
         price: 300,
+        purchase_price: 300,
+        quantity: orderSize,
         lastUpdated: '2024-04-18'
       }
       userStore.buyStock(orderSize, stock)
@@ -92,6 +103,8 @@ describe('userState', () => {
         name: 'Mocked Stock',
         ticker: 'MCK',
         price: 300,
+        purchase_price: 300,
+        quantity: orderSize,
         lastUpdated: '2024-04-18'
       }
 
@@ -110,7 +123,9 @@ describe('userState', () => {
         name: 'Mocked Stock',
         ticker: 'MCK',
         price: 300,
-        lastUpdated: '2024-04-01'
+        purchase_price: 300,
+        quantity: orderSize,
+        lastUpdated: '2024-04-18'
       }
       userStore.buyStock(orderSize, stock)
       expect(userStore.portfolio[0].quantity).toBe(2)
@@ -127,7 +142,9 @@ describe('userState', () => {
         name: 'Mocked Stock',
         ticker: 'MCK',
         price: 300,
-        lastUpdated: '2024-04-01'
+        purchase_price: 300,
+        quantity: orderSize,
+        lastUpdated: '2024-04-02'
       }
       userStore.buyStock(orderSize, stock1)
       expect(userStore.portfolio[0].purchase_price).toBe(stock1.price)
@@ -135,7 +152,9 @@ describe('userState', () => {
       const stock2 = {
         name: 'Mocked Stock',
         ticker: 'MCK',
-        price: 600,
+        price: 300,
+        purchase_price: 600,
+        quantity: orderSize,
         lastUpdated: '2024-04-10'
       }
       userStore.buyStock(orderSize, stock2)
@@ -154,35 +173,37 @@ describe('userState', () => {
         name: 'Mocked Stock',
         ticker: 'MCK',
         price: 300,
-        lastUpdated: '2024-04-01'
+        purchase_price: 300,
+        quantity: 1000,
+        lastUpdated: '2024-04-18'
       }
       expect(() => userStore.buyStock(1000, stock)).toThrowError()
     })
   })
 
-  describe.skip('sell stock function', () => {
-    it('does not allow to sell stocks which are not in portfolio', () => {
-      const userStore = useUserState()
-      const stock = {
-        ticker: 'MCK'
-      }
-      expect(() => userStore.sellStock(2, stock)).toThrowError()
-    })
+  // describe.skip('sell stock function', () => {
+  //   it('does not allow to sell stocks which are not in portfolio', () => {
+  //     const userStore = useUserState()
+  //     const stock = {
+  //       ticker: 'MCK'
+  //     }
+  //     expect(() => userStore.sellStock(2, stock)).toThrowError()
+  //   })
 
-    it('does not allow to sell more stocks than user holds in portfolio', () => {
-      const userStore = useUserState()
-      userStore.deposit(1000)
-      const stock = {
-        name: 'Mocked Stock',
-        ticker: 'MCK',
-        price: 300,
-        lastUpdated: '2024-04-01'
-      }
-      userStore.buyStock(2, stock)
-      expect(userStore.portfolio[0].quantity).toBe(2)
+  //   it('does not allow to sell more stocks than user holds in portfolio', () => {
+  //     const userStore = useUserState()
+  //     userStore.deposit(1000)
+  //     const stock = {
+  //       name: 'Mocked Stock',
+  //       ticker: 'MCK',
+  //       price: 300,
+  //       lastUpdated: '2024-04-01'
+  //     }
+  //     userStore.buyStock(2, stock)
+  //     expect(userStore.portfolio[0].quantity).toBe(2)
 
-      expect(() => userStore.sellStock(10, stock)).toThrowError()
-      expect(userStore.portfolio[0].quantity).toBe(2)
-    })
-  })
+  //     expect(() => userStore.sellStock(10, stock)).toThrowError()
+  //     expect(userStore.portfolio[0].quantity).toBe(2)
+  //   })
+  // })
 })
