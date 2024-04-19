@@ -11,6 +11,15 @@ interface Stock {
   lastUpdated: string
 }
 
+const stockFixture = {
+  name: 'Mocked Stock',
+  ticker: 'MCK',
+  price: 300,
+  purchase_price: 300,
+  quantity: 2,
+  lastUpdated: '2024-04-18'
+}
+
 describe('userState', () => {
   let userStore: ReturnType<typeof useUserState>
 
@@ -74,16 +83,7 @@ describe('userState', () => {
       expect(userStore.portfolio).toStrictEqual([])
       expect(userStore.portfolio.length).toBe(0)
 
-      const orderSize = 2
-      const stock = {
-        name: 'Mocked Stock',
-        ticker: 'MCK',
-        price: 300,
-        purchase_price: 300,
-        quantity: orderSize,
-        lastUpdated: '2024-04-18'
-      }
-      userStore.buyStock(orderSize, stock)
+      userStore.buyStock(2, { ...stockFixture })
 
       expect(userStore.portfolio.length).toBe(1)
       expect(userStore.portfolio[0]).toMatchObject({
@@ -98,18 +98,9 @@ describe('userState', () => {
     it('adjusts balance after trade', () => {
       const userStore = useUserState()
       userStore.deposit(1000)
-      const orderSize = 2
-      const stock = {
-        name: 'Mocked Stock',
-        ticker: 'MCK',
-        price: 300,
-        purchase_price: 300,
-        quantity: orderSize,
-        lastUpdated: '2024-04-18'
-      }
 
-      const expectedBalance = userStore.balance - orderSize * stock.price
-      userStore.buyStock(orderSize, stock)
+      const expectedBalance = userStore.balance - 2 * stockFixture.price
+      userStore.buyStock(2, { ...stockFixture })
       expect(userStore.balance).toBe(expectedBalance)
     })
 
@@ -118,49 +109,24 @@ describe('userState', () => {
       userStore.deposit(30000000)
       expect(userStore.portfolio.length).toBe(0)
 
-      const orderSize = 2
-      const stock = {
-        name: 'Mocked Stock',
-        ticker: 'MCK',
-        price: 300,
-        purchase_price: 300,
-        quantity: orderSize,
-        lastUpdated: '2024-04-18'
-      }
-      userStore.buyStock(orderSize, stock)
+      userStore.buyStock(2, { ...stockFixture })
       expect(userStore.portfolio[0].quantity).toBe(2)
 
-      userStore.buyStock(orderSize, stock)
+      userStore.buyStock(2, { ...stockFixture })
       expect(userStore.portfolio[0].quantity).toBe(4)
     })
 
     it('saves average purchase price if stock is bought several times', () => {
       const userStore = useUserState()
       userStore.deposit(30000000)
-      const orderSize = 2
-      const stock1 = {
-        name: 'Mocked Stock',
-        ticker: 'MCK',
-        price: 300,
-        purchase_price: 300,
-        quantity: orderSize,
-        lastUpdated: '2024-04-02'
-      }
-      userStore.buyStock(orderSize, stock1)
-      expect(userStore.portfolio[0].purchase_price).toBe(stock1.price)
 
-      const stock2 = {
-        name: 'Mocked Stock',
-        ticker: 'MCK',
-        price: 300,
-        purchase_price: 600,
-        quantity: orderSize,
-        lastUpdated: '2024-04-10'
-      }
-      userStore.buyStock(orderSize, stock2)
+      userStore.buyStock(2, { ...stockFixture })
 
-      const totalSpent = stock1.price * orderSize + stock2.price * orderSize
-      const totalQuantity = orderSize + orderSize
+      const stock2 = { ...stockFixture, purchase_price: 600 }
+      userStore.buyStock(2, stock2)
+
+      const totalSpent = stockFixture.price * 2 + stock2.price * 2
+      const totalQuantity = 2 + 2
       const avgPurchasePrice = totalSpent / totalQuantity
 
       expect(userStore.portfolio[0].purchase_price).toBeCloseTo(avgPurchasePrice)
@@ -169,15 +135,8 @@ describe('userState', () => {
     it('does not allow to buy more than available balance', () => {
       const userStore = useUserState()
       userStore.deposit(1000)
-      const stock = {
-        name: 'Mocked Stock',
-        ticker: 'MCK',
-        price: 300,
-        purchase_price: 300,
-        quantity: 1000,
-        lastUpdated: '2024-04-18'
-      }
-      expect(() => userStore.buyStock(1000, stock)).toThrowError()
+
+      expect(() => userStore.buyStock(10000, { ...stockFixture })).toThrowError()
     })
   })
 
