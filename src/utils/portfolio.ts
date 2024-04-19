@@ -7,12 +7,27 @@ interface Stock {
   quantity: number
 }
 
-export function calculateTotalInvested(portfolio: Stock[]): number {
-  return portfolio.reduce((total, stock) => total + stock.purchase_price * stock.quantity, 0)
+/**
+ * Calculates the total invested amount for a single stock or an array of stocks.
+ *
+ * @param {Stock | Stock[]} input - A single stock or an array of stocks.
+ * @returns {number} The total amount invested based on purchase price and quantity.
+ */
+export function calculateTotalInvested(input: Stock | Stock[]): number {
+  // check if input is an array. If not, wrap input in array
+  const stocks = Array.isArray(input) ? input : [input]
+  return stocks.reduce((total, stock) => total + stock.purchase_price * stock.quantity, 0)
 }
 
-export function calculateCurrentValue(portfolio: Stock[]): number {
-  return portfolio.reduce((total, stock) => total + stock.price * stock.quantity, 0)
+/**
+ * Calculates the current value of a single stock or an array of stocks based on the current price and quantity.
+ *
+ * @param {Stock | Stock[]} input - A single stock or an array of stocks.
+ * @returns {number} The current value of the stocks.
+ */
+export function calculateCurrentValue(input: Stock | Stock[]): number {
+  const stocks = Array.isArray(input) ? input : [input]
+  return stocks.reduce((total, stock) => total + stock.price * stock.quantity, 0)
 }
 
 export function calculatePortfolioReturn(currentValue: number, investedValue: number): number {
