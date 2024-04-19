@@ -154,7 +154,9 @@ describe('userState', () => {
       userStore.buyStock(2, { ...stockFixture })
       expect(userStore.portfolio[0].quantity).toBe(2)
 
-      expect(() => userStore.sellStock(10, { ...stockFixture })).toThrowError()
+      expect(() => userStore.sellStock(10, { ...stockFixture })).toThrowError(
+        'Cannot sell more than currently have'
+      )
       expect(userStore.portfolio[0].quantity).toBe(2)
     })
 
@@ -164,6 +166,42 @@ describe('userState', () => {
       userStore.buyStock(10, { ...stockFixture })
       userStore.sellStock(5, { ...stockFixture })
       expect(userStore.portfolio[0].quantity).toBe(10 - 5)
+    })
+
+    it('deletes stock from portfolio if user sells all stock holdings', () => {
+      const userStore = useUserState()
+      userStore.deposit(50000)
+      userStore.buyStock(10, { ...stockFixture })
+      expect(userStore.portfolio.length).toBe(1)
+      expect(userStore.portfolio[0]).toMatchObject({
+        name: 'Mocked Stock',
+        ticker: 'MCK',
+        purchase_price: 300,
+        quantity: 10,
+        lastUpdated: '2024-04-18'
+      })
+
+      userStore.sellStock(5, { ...stockFixture })
+      expect(userStore.portfolio[0]).toMatchObject({
+        name: 'Mocked Stock',
+        ticker: 'MCK',
+        purchase_price: 300,
+        quantity: 5,
+        lastUpdated: '2024-04-18'
+      })
+
+      userStore.sellStock(5, { ...stockFixture })
+      expect(userStore.portfolio.length).toBe(0)
+    })
+
+    it('updates user balance after sale completion', () => {
+      const userStore = useUserState()
+      userStore.deposit(1000)
+      userStore.buyStock(2, { ...stockFixture })
+      expect(userStore.balance).toBe(400)
+
+      userStore.sellStock(1, { ...stockFixture })
+      expect(userStore.balance).toBe(700)
     })
   })
 })
