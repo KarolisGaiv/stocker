@@ -140,29 +140,22 @@ describe('userState', () => {
     })
   })
 
-  // describe.skip('sell stock function', () => {
-  //   it('does not allow to sell stocks which are not in portfolio', () => {
-  //     const userStore = useUserState()
-  //     const stock = {
-  //       ticker: 'MCK'
-  //     }
-  //     expect(() => userStore.sellStock(2, stock)).toThrowError()
-  //   })
+  describe('sell stock function', () => {
+    it('does not allow to sell stocks which are not in portfolio', () => {
+      const userStore = useUserState()
 
-  //   it('does not allow to sell more stocks than user holds in portfolio', () => {
-  //     const userStore = useUserState()
-  //     userStore.deposit(1000)
-  //     const stock = {
-  //       name: 'Mocked Stock',
-  //       ticker: 'MCK',
-  //       price: 300,
-  //       lastUpdated: '2024-04-01'
-  //     }
-  //     userStore.buyStock(2, stock)
-  //     expect(userStore.portfolio[0].quantity).toBe(2)
+      expect(() => userStore.sellStock(2, { ...stockFixture })).toThrowError()
+    })
 
-  //     expect(() => userStore.sellStock(10, stock)).toThrowError()
-  //     expect(userStore.portfolio[0].quantity).toBe(2)
-  //   })
-  // })
+    it('does not allow to sell more stocks than user holds in portfolio', () => {
+      const userStore = useUserState()
+      userStore.deposit(1000)
+
+      userStore.buyStock(2, { ...stockFixture })
+      expect(userStore.portfolio[0].quantity).toBe(2)
+
+      expect(() => userStore.sellStock(10, { ...stockFixture })).toThrowError()
+      expect(userStore.portfolio[0].quantity).toBe(2)
+    })
+  })
 })
