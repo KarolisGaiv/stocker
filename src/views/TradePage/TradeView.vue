@@ -72,7 +72,30 @@ async function buyStock() {
     userState.buyStock(quantity.value, stockToBuy)
     alert('Purchase sucessfull')
   } catch (error) {
-    alert(`Error: $(error.message)`)
+    alert(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
+  }
+}
+
+async function sellStock() {
+  if (!stockDetails.value || quantity.value <= 0) {
+    alert('Please check the stock details and quantity')
+    return
+  }
+
+  try {
+    const stockToSell = {
+      name: stockDetails.value.name,
+      ticker: stockDetails.value.ticker,
+      price: stockPrice.value,
+      purchase_price: stockPrice.value,
+      quantity: quantity.value,
+      lastUpdated: format(new Date(), 'yyyy-MM-dd')
+    }
+
+    userState.sellStock(quantity.value, stockToSell)
+    alert('Sale successful')
+  } catch (error) {
+    alert(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
 }
 </script>
@@ -112,7 +135,7 @@ async function buyStock() {
       <label for="quantity">Enter quantity:</label>
       <input type="number" id="quanitity" v-model="quantity" />
       <button @click="buyStock">Buy</button>
-      <button>Sell</button>
+      <button @click="sellStock">Sell</button>
     </div>
   </main>
 </template>
