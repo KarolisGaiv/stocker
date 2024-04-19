@@ -34,7 +34,6 @@ describe('userState', () => {
 
   describe('deposit funcionality', () => {
     it('increases balance for positive input', () => {
-      const userStore = useUserState()
       expect(userStore.balance).toBe(0)
       userStore.deposit(300)
       expect(userStore.balance).toBe(300)
@@ -45,7 +44,6 @@ describe('userState', () => {
     })
 
     it('does not increase balance for any non-positive or zero input', () => {
-      const userStore = useUserState()
       userStore.deposit(0)
       expect(userStore.balance).toBe(0)
       expect(userStore.updateUser).not.toHaveBeenCalledWith({ balance: 0 })
@@ -57,7 +55,6 @@ describe('userState', () => {
 
   describe('withdraw funcionality', () => {
     it('decreases balance succesfully', () => {
-      const userStore = useUserState()
       userStore.deposit(700)
       userStore.withdraw(300)
       expect(userStore.balance).toBe(400)
@@ -65,7 +62,6 @@ describe('userState', () => {
     })
 
     it('does not allow withdraw more than there are in the balance', () => {
-      const userStore = useUserState()
       userStore.deposit(700)
       expect(userStore.updateUser).toHaveBeenCalledTimes(1)
 
@@ -77,7 +73,6 @@ describe('userState', () => {
 
   describe('buyStock funcionality', () => {
     it('adds stock to porftolio', () => {
-      const userStore = useUserState()
       userStore.deposit(1000)
       expect(userStore.balance).toBe(1000)
       expect(userStore.portfolio).toStrictEqual([])
@@ -96,7 +91,6 @@ describe('userState', () => {
     })
 
     it('adjusts balance after trade', () => {
-      const userStore = useUserState()
       userStore.deposit(1000)
 
       const expectedBalance = userStore.balance - 2 * stockFixture.price
@@ -105,7 +99,6 @@ describe('userState', () => {
     })
 
     it('increases quanitity if stock already exist in portfolio', () => {
-      const userStore = useUserState()
       userStore.deposit(30000000)
       expect(userStore.portfolio.length).toBe(0)
 
@@ -117,7 +110,6 @@ describe('userState', () => {
     })
 
     it('saves average purchase price if stock is bought several times', () => {
-      const userStore = useUserState()
       userStore.deposit(30000000)
 
       userStore.buyStock(2, { ...stockFixture })
@@ -133,7 +125,6 @@ describe('userState', () => {
     })
 
     it('does not allow to buy more than available balance', () => {
-      const userStore = useUserState()
       userStore.deposit(1000)
 
       expect(() => userStore.buyStock(10000, { ...stockFixture })).toThrowError()
@@ -142,13 +133,10 @@ describe('userState', () => {
 
   describe('sell stock function', () => {
     it('does not allow to sell stocks which are not in portfolio', () => {
-      const userStore = useUserState()
-
       expect(() => userStore.sellStock(2, { ...stockFixture })).toThrowError()
     })
 
     it('does not allow to sell more stocks than user holds in portfolio', () => {
-      const userStore = useUserState()
       userStore.deposit(1000)
 
       userStore.buyStock(2, { ...stockFixture })
@@ -161,7 +149,6 @@ describe('userState', () => {
     })
 
     it('subtracts necessary quantity from portoflio', () => {
-      const userStore = useUserState()
       userStore.deposit(50000)
       userStore.buyStock(10, { ...stockFixture })
       userStore.sellStock(5, { ...stockFixture })
@@ -169,7 +156,6 @@ describe('userState', () => {
     })
 
     it('deletes stock from portfolio if user sells all stock holdings', () => {
-      const userStore = useUserState()
       userStore.deposit(50000)
       userStore.buyStock(10, { ...stockFixture })
       expect(userStore.portfolio.length).toBe(1)
@@ -195,7 +181,6 @@ describe('userState', () => {
     })
 
     it('updates user balance after sale completion', () => {
-      const userStore = useUserState()
       userStore.deposit(1000)
       userStore.buyStock(2, { ...stockFixture })
       expect(userStore.balance).toBe(400)
