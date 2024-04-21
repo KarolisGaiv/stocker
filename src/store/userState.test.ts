@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useUserState } from './userState'
 import { format, subDays } from 'date-fns'
@@ -193,6 +193,10 @@ describe('userState', () => {
   })
 
   describe('updatePortfolioPrices function', () => {
+    afterEach(() => {
+      vi.restoreAllMocks() // Restore all mocks to their original value (if using Vitest)
+    })
+
     it('updates prices for stocks not updated today', async () => {
       const yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd')
       const today = format(new Date(), 'yyyy-MM-dd')
@@ -205,7 +209,8 @@ describe('userState', () => {
 
       const stockUpdatedToday = {
         ...stockFixture,
-        lastUpdated: today
+        lastUpdated: today,
+        price: 300
       }
 
       userStore.portfolio = [stockUpdatedYesterday, stockUpdatedToday]
@@ -227,6 +232,32 @@ describe('userState', () => {
       // check if stockUpdatedToday object was not updated
       expect(userStore.portfolio[1].price).toBe(300)
       expect(userStore.portfolio[1].lastUpdated).toBe(today)
+    })
+
+    it('does not call API for stocks updated today', async () => {
+      const today = format(new Date(), 'yyyy-MM-dd')
+
+      const stockUpdatedToday = {
+        ...stockFixture,
+        lastUpdated: today,
+        price: 500
+      }
+
+      const stockUpdatedToday2 = {
+        ...stockFixture,
+        lastUpdated: today,
+        price: 400
+      }
+
+      userStore.portfolio = [stockUpdatedToday, stockUpdatedToday2]
+      const spy = vi.spyOn(stock_api, 'getStockPrice')
+      await userStore.updatePortfolioPrices()
+
+      expect(spy).not.toHaveBeenCalled()
+      expect(stockUpdatedToday.price).toBe(500)
+      expect(stockUpdatedToday.lastUpdated).toBe(today)
+      expect(stockUpdatedToday2.price).toBe(400)
+      expect(stockUpdatedToday2.lastUpdated).toBe(today)
     })
   })
 })
