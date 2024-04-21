@@ -245,6 +245,10 @@ describe('userState', () => {
       // check if stockUpdatedToday object was not updated
       expect(userStore.portfolio[1].price).toBe(300)
       expect(userStore.portfolio[1].lastUpdated).toBe(today)
+
+      expect(userStore.updateUser).toHaveBeenCalledWith({
+        portfolio: userStore.portfolio
+      })
     })
 
     it('does not call API for stocks updated today', async () => {
@@ -271,6 +275,8 @@ describe('userState', () => {
       expect(stockUpdatedToday.lastUpdated).toBe(today)
       expect(stockUpdatedToday2.price).toBe(400)
       expect(stockUpdatedToday2.lastUpdated).toBe(today)
+
+      expect(userStore.updateUser).not.toHaveBeenCalled()
     })
 
     it('does nothing for empty portfolio', async () => {
@@ -279,6 +285,14 @@ describe('userState', () => {
       await userStore.updatePortfolioPrices()
 
       expect(spy).not.toHaveBeenCalled()
+    })
+
+    it('does not update user data if API call fails', async () => {
+      vi.spyOn(stock_api, 'getStockPrice').mockRejectedValue(new Error('Failed to fetch price'))
+
+      await userStore.updatePortfolioPrices()
+
+      expect(userStore.updateUser).not.toHaveBeenCalled()
     })
   })
 })

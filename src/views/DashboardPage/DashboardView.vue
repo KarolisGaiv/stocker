@@ -5,9 +5,9 @@ import {
   calculateCurrentValue,
   calculatePortfolioReturn
 } from '@/utils/portfolio'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 
-const { balance, portfolio } = useUserState()
+const { portfolio, updatePortfolioPrices } = useUserState()
 
 const totalInvested = computed(() => {
   return calculateTotalInvested(portfolio)
@@ -19,6 +19,10 @@ const totalCurrentPortfolioValue = computed(() => {
 
 const portfolioReturn = computed(() => {
   return calculatePortfolioReturn(totalCurrentPortfolioValue.value, totalInvested.value)
+})
+
+onMounted(async () => {
+  await updatePortfolioPrices()
 })
 </script>
 

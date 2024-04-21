@@ -121,6 +121,7 @@ export const useUserState = defineStore('user', {
 
     async updatePortfolioPrices(): Promise<void> {
       const today = format(new Date(), 'yyyy-MM-dd')
+      let updated = false
 
       for (const stock of this.portfolio) {
         if (stock.lastUpdated < today) {
@@ -130,6 +131,7 @@ export const useUserState = defineStore('user', {
               const newPrice = response.results[0].o
               stock.price = newPrice
               stock.lastUpdated = today
+              updated = true
             } else {
               console.error('No valid data for stock')
             }
@@ -137,6 +139,9 @@ export const useUserState = defineStore('user', {
             console.error(`Failed to update stock price for ${stock.name}`)
           }
         }
+      }
+      if (updated) {
+        this.updateUser({ portfolio: this.portfolio })
       }
     }
   }
