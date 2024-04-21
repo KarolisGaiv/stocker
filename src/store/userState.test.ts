@@ -259,5 +259,13 @@ describe('userState', () => {
       expect(stockUpdatedToday2.price).toBe(400)
       expect(stockUpdatedToday2.lastUpdated).toBe(today)
     })
+
+    it('does nothing for empty portfolio', async () => {
+      userStore.portfolio = []
+      const spy = vi.spyOn(stock_api, 'getStockPrice')
+      await userStore.updatePortfolioPrices()
+
+      expect(spy).not.toHaveBeenCalled()
+    })
   })
 })
