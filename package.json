@@ -16,6 +16,7 @@
     "type-check:watch": "vue-tsc --watch --noEmit"
   },
   "dependencies": {
+    "chart.js": "^4.4.2",
     "date-fns": "^3.6.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",

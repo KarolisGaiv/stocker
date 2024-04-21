@@ -6,6 +6,7 @@ import {
   calculatePortfolioReturn
 } from '@/utils/portfolio'
 import { computed, onMounted } from 'vue'
+import PortfolioChart from './PortfolioChart.vue'
 
 const { portfolio, updatePortfolioPrices } = useUserState()
 
@@ -35,6 +36,9 @@ onMounted(async () => {
       <h3>Portfolio size: ${{ totalInvested }}</h3>
       <h3>Current Portfolio value: ${{ totalCurrentPortfolioValue }}</h3>
       <h4>Portfolio Return: {{ portfolioReturn }}%</h4>
+    </div>
+    <div>
+      <PortfolioChart :portfolio="portfolio" />
     </div>
   </main>
 </template>
