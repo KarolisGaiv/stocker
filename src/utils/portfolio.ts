@@ -36,3 +36,10 @@ export function calculatePortfolioReturn(currentValue: number, investedValue: nu
   const result = ((currentValue - investedValue) / investedValue) * 100
   return parseFloat(result.toFixed(2))
 }
+
+export function calculateStockPercentageOfPortfolio(
+  sharesValue: number,
+  portfolioValue: number
+): number {
+  return (sharesValue / portfolioValue) * 100
+}

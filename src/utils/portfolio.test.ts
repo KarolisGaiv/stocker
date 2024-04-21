@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest'
 import {
   calculateTotalInvested,
   calculateCurrentValue,
-  calculatePortfolioReturn
+  calculatePortfolioReturn,
+  calculateStockPercentageOfPortfolio
 } from './portfolio'
 
 const portfolioFixture = [
@@ -112,5 +113,13 @@ describe('calculatePortfolioReturn function', () => {
     const expectedReturn = ((10000 - 10000) / 10000) * 100
     const calculatedReturn = calculatePortfolioReturn(currentValue, investedValue)
     expect(calculatedReturn).toBe(expectedReturn)
+  })
+})
+
+describe('calculateStockPercentageOfPortfolio', () => {
+  it('calculates share part of total portfolio holdings', () => {
+    const currentSharesValue = 1000
+    const currentPortfolioValue = 10000
+    expect(calculateStockPercentageOfPortfolio(currentSharesValue, currentPortfolioValue)).toBe(10)
   })
 })
