@@ -131,6 +131,19 @@ describe('userState', () => {
 
       expect(() => userStore.buyStock(10000, { ...stockFixture })).toThrowError()
     })
+
+    it('does not allow to buy more than 5 stocks  in total', () => {
+      userStore.deposit(1000)
+
+      userStore.portfolio = Array.from({ length: 5 }, (_, i) => ({
+        ...stockFixture,
+        ticker: `MKCD${i + 1}`
+      }))
+
+      expect(() => userStore.buyStock(1, { ...stockFixture })).toThrowError(
+        'Cannot have more than 5 stocks in portfolio'
+      )
+    })
   })
 
   describe('sell stock function', () => {
@@ -194,7 +207,7 @@ describe('userState', () => {
 
   describe('updatePortfolioPrices function', () => {
     afterEach(() => {
-      vi.restoreAllMocks() // Restore all mocks to their original value (if using Vitest)
+      vi.restoreAllMocks()
     })
 
     it('updates prices for stocks not updated today', async () => {

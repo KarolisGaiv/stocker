@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { storageService } from '@/utils/storage'
 import { getStockPrice } from '@/api/stock_api'
-import { isToday, parse, format } from 'date-fns'
+import { format } from 'date-fns'
+
+const MAX_PORTFOLIO_SIZE = 5
 
 interface User {
   balance: number
@@ -55,6 +57,10 @@ export const useUserState = defineStore('user', {
 
     buyStock(orderQuantity: number, orderInfo: Stock) {
       const totalOrderPrice = orderQuantity * orderInfo.price
+
+      if (this.portfolio.length === MAX_PORTFOLIO_SIZE) {
+        throw new Error(`Cannot have more than ${MAX_PORTFOLIO_SIZE} stocks in portfolio`)
+      }
 
       if (totalOrderPrice > this.balance) {
         throw new Error('Insufficient balance')
