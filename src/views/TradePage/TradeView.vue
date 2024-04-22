@@ -117,10 +117,18 @@ async function sellStock() {
 
 <template>
   <main>
-    <form @submit.prevent="searchStock">
+    <form @submit.prevent="searchStock" class="search-form">
       <label class="stock-search-label" for="stockName">Search for Stock</label>
-      <input type="text" id="stockName" placeholder="Enter Company Symbol" v-model="stockName" />
-      <button type="submit">Search</button>
+      <div class="input-group">
+        <input
+          type="text"
+          id="stockName"
+          placeholder="Enter Company Symbol"
+          v-model="stockName"
+          class="stock-name"
+        />
+        <button type="submit" class="search-btn">Search</button>
+      </div>
     </form>
 
     <div class="stock-info" v-if="stockDetails">
@@ -159,8 +167,52 @@ async function sellStock() {
 </template>
 
 <style scoped>
-form {
+.search-form {
   display: flex;
   flex-direction: column;
+  margin: 1rem 0;
+
+  & label {
+    font-size: 1.5rem;
+  }
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+
+  & input,
+  button {
+    height: 2.5rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+.stock-name {
+  border: 0;
+  border-radius: 0.5rem;
+  flex-grow: 1;
+  margin-right: 0.5rem;
+
+  &:hover,
+  &:focus {
+    background: #e8f0fe;
+    outline: none;
+    border: 1px solid var(--dark-blue-background-color);
+  }
+}
+
+.search-btn {
+  cursor: pointer;
+  background: var(--light-blue-background-color);
+  border: none;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+
+  &:hover {
+    background: var(--dark-blue-background-color);
+  }
 }
 </style>
