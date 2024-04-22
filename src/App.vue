@@ -1,24 +1,11 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { storageService } from './utils/storage'
-import { watchEffect, ref } from 'vue'
-
-const balance = ref(0)
-
-function fetchBalance() {
-  const user = storageService.getUser()
-  balance.value = user.balance
-}
-
-watchEffect(() => {
-  fetchBalance()
-})
 </script>
 
 <template>
   <header>
     <button @click="$router.push('/')" class="app-btn">Stocky App</button>
-    <button @click="$router.push('/balance')" class="balance-btn">Balance: ${{ balance }}</button>
+    <button @click="$router.push('/balance')" class="profile-btn">Profile</button>
   </header>
   <RouterView />
 </template>
@@ -37,17 +24,19 @@ header {
 .app-btn {
   background: none;
   border: none;
+  cursor: pointer;
   font-size: 1.5rem;
   box-shadow: none;
-  text-wrap: nowrap;
+  text-wrap: no;
 }
 
-.balance-btn {
+.profile-btn {
   border-radius: 0.5rem;
   border: none;
   background: var(--light-blue-background-color);
-  padding: 0 1rem;
+  padding: 1rem 2rem;
   cursor: pointer;
+  font-size: 1rem;
 
   &:hover {
     background: var(--dark-blue-background-color);
