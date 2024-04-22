@@ -32,10 +32,8 @@ onMounted(async () => {
 
 <template>
   <main>
-    <h1>This is A "Home View"</h1>
-
     <div>
-      <h2>Your portfolio</h2>
+      <h2>Your Portfolio Details</h2>
       <h3>Portfolio size: ${{ totalInvested }}</h3>
       <h3>Current Portfolio value: ${{ totalCurrentPortfolioValue }}</h3>
       <h4>Portfolio Return: {{ portfolioReturn }}%</h4>
