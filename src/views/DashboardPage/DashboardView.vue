@@ -7,7 +7,6 @@ import {
 } from '@/utils/portfolio'
 import { computed, onMounted } from 'vue'
 import PortfolioChart from './PortfolioChart.vue'
-import { useRouter } from 'vue-router'
 
 const { portfolio, updatePortfolioPrices } = useUserState()
 
@@ -22,8 +21,6 @@ const totalCurrentPortfolioValue = computed(() => {
 const portfolioReturn = computed(() => {
   return calculatePortfolioReturn(totalCurrentPortfolioValue.value, totalInvested.value)
 })
-
-const router = useRouter()
 
 onMounted(async () => {
   await updatePortfolioPrices()
