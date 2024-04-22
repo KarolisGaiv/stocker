@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import logo from './assets/stocky-icon.png'
 </script>
 
 <template>
   <header>
-    <button @click="$router.push('/')" class="app-btn">Stocky App</button>
+    <button @click="$router.push('/')" class="app-btn">
+      <img :src="logo" alt="Stocky App logo" />
+    </button>
+    <h1>Stocky App</h1>
     <button @click="$router.push('/balance')" class="profile-btn">Profile</button>
   </header>
   <RouterView />
@@ -22,19 +26,20 @@ header {
 }
 
 .app-btn {
+  display: flex;
+  align-items: center;
   background: none;
   border: none;
   cursor: pointer;
   font-size: 1.5rem;
   box-shadow: none;
-  text-wrap: no;
 }
 
 .profile-btn {
   border-radius: 0.5rem;
   border: none;
   background: var(--light-blue-background-color);
-  padding: 1rem 2rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
   font-size: 1rem;
 
