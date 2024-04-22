@@ -38,6 +38,9 @@
   --main-background-color: #f1eedc;
   --light-blue-background-color: #bed7dc;
   --dark-blue-background-color: #b3c8cf;
+  --yellow-background-color: #eec759;
+  --lime-background-color: #d2de32;
+  --red-background-color: #ff6969;
 }
 
 @media (prefers-color-scheme: dark) {

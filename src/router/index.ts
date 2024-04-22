@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '../views/DashboardPage/DashboardView.vue'
 import TradeView from '../views/TradePage/TradeView.vue'
+import BalanceView from '../views/BalancePage/BalanceView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,7 +17,7 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/BalancePage/BalanceView.vue')
+      component: BalanceView
     },
     {
       path: '/trade',
