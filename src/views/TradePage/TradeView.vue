@@ -8,6 +8,7 @@ import {
 } from '@/api/stock_api'
 import { useUserState } from '@/store/userState'
 import { format } from 'date-fns'
+import StockChart from './StockChart.vue'
 
 interface StockDetails {
   name: string
@@ -31,12 +32,12 @@ const stockDetails = ref<StockDetails | null>(null)
 const stockNews = ref<NewsItem[]>([])
 const quantity = ref<number>(0)
 const userState = useUserState()
+const historicalPrices = ref(null)
 
 async function searchStock() {
   const price: StockPriceDetails = await getStockPrice(stockName.value.toUpperCase())
   const res = await getStockInformation(stockName.value.toUpperCase())
-  const test = await getMonthPriceHistory(stockName.value)
-  console.log(test)
+  historicalPrices.value = await getMonthPriceHistory(stockName.value)
 
   stockDetails.value = {
     name: res.results.name,
@@ -143,6 +144,10 @@ async function sellStock() {
       <input type="number" id="quanitity" v-model="quantity" />
       <button @click="buyStock">Buy</button>
       <button @click="sellStock">Sell</button>
+    </div>
+
+    <div v-if="historicalPrices">
+      <StockChart :historicalData="historicalPrices.results" />
     </div>
   </main>
 </template>
