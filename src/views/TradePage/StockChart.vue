@@ -23,9 +23,6 @@ const drawChart = (historicalData) => {
         {
           label: 'Stock Price USD',
           data: historicalData.map((data) => data.o)
-          //   backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          //   borderColor: 'rgba(255, 99, 132, 1)',
-          //   borderWidth: 1
         }
       ]
     },
@@ -62,13 +59,11 @@ watch(
 </script>
 
 <template>
-  <div>
-    <canvas ref="stockChartCanvas"></canvas>
-  </div>
+  <canvas ref="stockChartCanvas"></canvas>
 </template>
 
-<!-- <style scoped>
+<style scoped>
 canvas {
   max-width: 500px;
 }
-</style> -->
+</style>

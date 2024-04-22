@@ -17,7 +17,7 @@ watchEffect(() => {
 
 <template>
   <header>
-    <h1>Stocky App</h1>
+    <button @click="$router.push('/')" class="app-btn">Stocky App</button>
     <button @click="$router.push('/balance')" class="balance-btn">Balance: ${{ balance }}</button>
   </header>
   <RouterView />
@@ -32,6 +32,14 @@ header {
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0;
+}
+
+.app-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  box-shadow: none;
+  text-wrap: nowrap;
 }
 
 .balance-btn {

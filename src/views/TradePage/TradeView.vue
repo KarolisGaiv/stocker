@@ -116,10 +116,9 @@ async function sellStock() {
 </script>
 
 <template>
-  <header><h1>Place to Trade</h1></header>
   <main>
     <form @submit.prevent="searchStock">
-      <label for="stockName">Search for Stock</label>
+      <label class="stock-search-label" for="stockName">Search for Stock</label>
       <input type="text" id="stockName" placeholder="Enter Company Symbol" v-model="stockName" />
       <button type="submit">Search</button>
     </form>
@@ -132,6 +131,10 @@ async function sellStock() {
 
     <div class="stock-price" v-if="stockDetails">
       <h4>Price: ${{ stockPrice }}</h4>
+    </div>
+
+    <div v-if="historicalPrices" class="price-graph-container">
+      <StockChart :historicalData="historicalPrices.results" />
     </div>
 
     <button @click="getRelatedStockNews">Related News</button>
@@ -151,10 +154,6 @@ async function sellStock() {
       <input type="number" id="quanitity" v-model="quantity" />
       <button @click="buyStock">Buy</button>
       <button @click="sellStock">Sell</button>
-    </div>
-
-    <div v-if="historicalPrices">
-      <StockChart :historicalData="historicalPrices.results" />
     </div>
   </main>
 </template>

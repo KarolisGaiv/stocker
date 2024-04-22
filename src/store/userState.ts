@@ -43,13 +43,13 @@ export const useUserState = defineStore('user', {
 
     deposit(amount: number) {
       if (amount > 0) {
-        this.updateUser({ balance: this.balance + amount })
+        this.updateUser({ balance: parseFloat((this.balance + amount).toFixed(2)) })
       }
     },
 
     withdraw(amount: number) {
       if (amount > 0 && amount <= this.balance) {
-        this.updateUser({ balance: this.balance - amount })
+        this.updateUser({ balance: parseFloat((this.balance - amount).toFixed(2)) })
       } else {
         throw new Error('Insufficient balance')
       }
