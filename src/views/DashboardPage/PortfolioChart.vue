@@ -1,10 +1,12 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
+import { calculateStockPercentageOfPortfolio } from '@/utils/portfolio'
 import { Chart, PieController, ArcElement, Tooltip, Legend, Colors } from 'chart.js'
 Chart.register(PieController, ArcElement, Tooltip, Legend, Colors)
 
 const props = defineProps({
-  portfolio: Array
+  portfolio: Array,
+  portfolioValue: Number
 })
 
 const portfolioCanvas = ref(null)
@@ -40,7 +42,8 @@ const drawChart = () => {
           callbacks: {
             label: function (tooltipItem) {
               let value = tooltipItem.raw
-              return `Total Value: $${value.toFixed(2)} USD`
+              let percentage = calculateStockPercentageOfPortfolio(value, props.portfolioValue)
+              return `Percentage in Portfolio: ${percentage}%`
             }
           }
         }

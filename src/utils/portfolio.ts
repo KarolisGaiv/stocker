@@ -41,5 +41,5 @@ export function calculateStockPercentageOfPortfolio(
   sharesValue: number,
   portfolioValue: number
 ): number {
-  return (sharesValue / portfolioValue) * 100
+  return parseFloat(((sharesValue / portfolioValue) * 100).toFixed(2))
 }

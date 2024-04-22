@@ -38,7 +38,7 @@ onMounted(async () => {
       <h4>Portfolio Return: {{ portfolioReturn }}%</h4>
     </div>
     <div>
-      <PortfolioChart :portfolio="portfolio" />
+      <PortfolioChart :portfolio="portfolio" :portfolioValue="totalCurrentPortfolioValue" />
     </div>
   </main>
 </template>
