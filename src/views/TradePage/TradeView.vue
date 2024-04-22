@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { getStockPrice, getStockInformation, getStockNews } from '@/api/stock_api'
+import {
+  getStockPrice,
+  getStockInformation,
+  getStockNews,
+  getMonthPriceHistory
+} from '@/api/stock_api'
 import { useUserState } from '@/store/userState'
 import { format } from 'date-fns'
 
@@ -29,8 +34,9 @@ const userState = useUserState()
 
 async function searchStock() {
   const price: StockPriceDetails = await getStockPrice(stockName.value.toUpperCase())
-  console.log(price)
   const res = await getStockInformation(stockName.value.toUpperCase())
+  const test = await getMonthPriceHistory(stockName.value)
+  console.log(test)
 
   stockDetails.value = {
     name: res.results.name,

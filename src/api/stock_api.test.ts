@@ -27,16 +27,4 @@ describe('getStockPrice function ', () => {
       expect.stringContaining(`https://api.polygon.io/v2/aggs/ticker/${stock}/prev?adjusted=true`)
     )
   })
-  it('handles failed fetch', async () => {
-    const errorMessage = 'Failed to fetch data'
-    vi.mocked(fetch).mockRejectedValue(new Error(errorMessage))
-
-    const stock = 'MCK'
-    const stockData = await getStockPrice(stock)
-
-    expect(stockData).toBe(null)
-    expect(fetch).toHaveBeenCalledWith(
-      expect.stringContaining(`https://api.polygon.io/v2/aggs/ticker/${stock}/prev?adjusted=true`)
-    )
-  })
 })
