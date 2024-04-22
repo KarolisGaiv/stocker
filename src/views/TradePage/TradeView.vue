@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import StockChart from './StockChart.vue'
 import {
   getStockPrice,
   getStockInformation,
@@ -8,7 +9,6 @@ import {
 } from '@/api/stock_api'
 import { useUserState } from '@/store/userState'
 import { format } from 'date-fns'
-import StockChart from './StockChart.vue'
 
 interface StockDetails {
   name: string
@@ -26,13 +26,20 @@ interface NewsItem {
   author: string
   article_url: string
 }
+
+interface StockHistoricalPriceResponse {
+  results: {
+    o: number
+  }[]
+}
+
 const stockName = ref<string>('')
 const stockPrice = ref<number>(0)
 const stockDetails = ref<StockDetails | null>(null)
 const stockNews = ref<NewsItem[]>([])
 const quantity = ref<number>(0)
 const userState = useUserState()
-const historicalPrices = ref(null)
+const historicalPrices = ref<StockHistoricalPriceResponse | null>(null)
 
 async function searchStock() {
   const price: StockPriceDetails = await getStockPrice(stockName.value.toUpperCase())
