@@ -57,7 +57,13 @@ watch(() => props.portfolio, drawChart, { deep: true })
 </script>
 
 <template>
-  <div>
+  <div class="chart-container">
     <canvas ref="portfolioCanvas"></canvas>
   </div>
 </template>
+
+<style scoped>
+.chart-container {
+  margin: 2rem 0;
+}
+</style>

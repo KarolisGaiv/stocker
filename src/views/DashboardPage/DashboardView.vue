@@ -49,15 +49,13 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div>
-      <PortfolioChart :portfolio="portfolio" :portfolioValue="totalCurrentPortfolioValue" />
-    </div>
-    <button @click="$router.push(`/trade`)">Go To Trade</button>
+    <PortfolioChart :portfolio="portfolio" :portfolioValue="totalCurrentPortfolioValue" />
+    <button @click="$router.push(`/trade`)" class="trade-btn">Trade</button>
   </main>
 </template>
 
 <style scoped>
-h2 {
+main {
   text-align: center;
 }
 
@@ -80,6 +78,26 @@ h2 {
   align-items: center;
   padding: 0.2rem 1rem;
   min-width: 150px;
+}
+
+.trade-btn {
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  border: none;
+  background: #dc84f3;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition:
+    box-shadow 0.2s,
+    padding 0.2s;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .portfolio-value-container,
