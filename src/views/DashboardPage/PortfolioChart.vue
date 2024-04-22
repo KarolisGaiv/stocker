@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted, watch } from 'vue'
-import { Chart, PieController, ArcElement, Tooltip, Legend } from 'chart.js'
-Chart.register(PieController, ArcElement, Tooltip, Legend)
+import { Chart, PieController, ArcElement, Tooltip, Legend, Colors } from 'chart.js'
+Chart.register(PieController, ArcElement, Tooltip, Legend, Colors)
 
 const props = defineProps({
   portfolio: Array
@@ -14,10 +14,8 @@ const drawChart = () => {
   const labels = props.portfolio.map((stock) => stock.name)
   const data = props.portfolio.map((stock) => stock.price * stock.quantity)
 
-  const backgroundColors = props.portfolio.map(() => `hsl(${Math.random() * 360}, 100%, 75%)`)
-
   if (myChart) {
-    myChart.destroy() // Destroy the previous chart instance if exists
+    myChart.destroy()
   }
 
   myChart = new Chart(portfolioCanvas.value.getContext('2d'), {
@@ -26,9 +24,7 @@ const drawChart = () => {
       labels,
       datasets: [
         {
-          label: 'Portfolio Value',
           data,
-          backgroundColor: backgroundColors,
           hoverOffset: 4
         }
       ]
@@ -40,7 +36,13 @@ const drawChart = () => {
           position: 'top'
         },
         tooltip: {
-          enabled: true
+          enabled: true,
+          callbacks: {
+            label: function (tooltipItem) {
+              let value = tooltipItem.raw
+              return `Total Value: $${value.toFixed(2)} USD`
+            }
+          }
         }
       }
     }
