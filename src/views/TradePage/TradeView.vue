@@ -253,4 +253,8 @@ async function sellStock() {
     background-color: #d9ba4b;
   }
 }
+
+.price-graph-container {
+  margin: 2rem 0;
+}
 </style>
