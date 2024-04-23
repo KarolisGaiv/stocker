@@ -134,7 +134,7 @@ async function sellStock() {
       </div>
     </form>
 
-    <div class="stock-info-container" v-if="stockDetails">
+    <div class="stock-info-container" v-if="stockDetails" data-test="stock-info-container">
       <h2>Name: {{ stockDetails.name }}</h2>
       <div class="stock-labels-wrapper">
         <span class="stock-info-label"
@@ -170,7 +170,7 @@ async function sellStock() {
     <button v-if="historicalPrices" @click="getRelatedStockNews" class="news-btn">
       Related News
     </button>
-    <div class="stock-news" v-if="stockNews.length > 0">
+    <div class="stock-news" v-if="stockNews.length > 0" data-test="stock-news-container">
       <ul>
         <li v-for="(newsItem, index) in stockNews" :key="index" class="news-card">
           <a :href="newsItem.article_url" target="_blank">{{ newsItem.title }}</a>

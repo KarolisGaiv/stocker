@@ -79,3 +79,28 @@ test('navigate to trade page', async ({ page }) => {
   await expect(page.getByText('Search for Stock')).toBeVisible()
   await expect(page.getByPlaceholder('Enter Company Symbol')).toBeVisible()
 })
+
+test('search for AAPL stock and show related news', async ({ page }) => {
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Trade' }).click()
+  await page.getByPlaceholder('Enter Company Symbol').click()
+  await page.getByPlaceholder('Enter Company Symbol').fill('aapl')
+  await page.getByRole('button', { name: 'Search' }).click()
+  await page.getByRole('button', { name: 'Related News' }).click()
+
+  //has stock graph
+  await expect(page.locator('.price-graph-container')).toBeVisible()
+
+  // has stock information (ticker, price, homepage container)
+  await expect(page.locator('[data-test="stock-info-container"]')).toBeVisible()
+
+  // has buy/sell buttons
+  await expect(page.getByRole('button', { name: 'Buy' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Sell' })).toBeVisible()
+
+  // has related news button
+  await expect(page.getByRole('button', { name: 'Related News' })).toBeVisible()
+
+  // shows related APPL news
+  await expect(page.locator('[data-test="stock-news-container"]')).toBeVisible()
+})
