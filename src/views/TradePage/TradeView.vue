@@ -178,10 +178,24 @@ async function sellStock() {
 </template>
 
 <style scoped>
+main {
+  @media (min-width: 1024px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      'search info'
+      'chart actions'
+      'chart news';
+    gap: 20px;
+  }
+}
+
 .search-form {
   display: flex;
   flex-direction: column;
   margin: 1rem 0;
+  grid-area: search;
 
   & label {
     font-size: 1.5rem;
@@ -205,6 +219,14 @@ async function sellStock() {
 
   & .sell-btn:hover {
     background: var(--red-background-color);
+  }
+}
+
+.stock-info-container {
+  grid-area: info;
+
+  @media (min-width: 1024px) {
+    margin: 1rem 0;
   }
 }
 
@@ -270,15 +292,21 @@ async function sellStock() {
 }
 
 .price-graph-container {
+  grid-area: chart;
   margin: 1rem 0;
 }
 
 .trade-action-wrapper {
   display: flex;
   flex-direction: column;
+  grid-area: actions;
 
   & label {
     font-size: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    margin: 1rem 0;
   }
 }
 
@@ -289,8 +317,13 @@ async function sellStock() {
 }
 
 .news-btn {
+  grid-area: news;
   padding: 1rem;
   width: 100%;
+
+  @media (min-width: 1024px) {
+    height: fit-content;
+  }
 }
 
 ul {
