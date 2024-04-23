@@ -104,3 +104,24 @@ test('search for AAPL stock and show related news', async ({ page }) => {
   // shows related APPL news
   await expect(page.locator('[data-test="stock-news-container"]')).toBeVisible()
 })
+
+test('show portfolio pie chart after filling portfolio', async ({ page }) => {
+  await page.goto('./')
+
+  await expect(page.locator('[data-test="portfolio-chart"]')).toBeHidden()
+
+  await page.getByRole('button', { name: 'Profile' }).click()
+  await page.getByPlaceholder('Enter amount').click()
+  await page.getByPlaceholder('Enter amount').fill('6000')
+  await page.getByRole('button', { name: 'Deposit' }).click()
+  await page.goto('./trade')
+  await page.getByPlaceholder('Enter Company Symbol').click()
+  await page.getByPlaceholder('Enter Company Symbol').fill('aapl')
+  await page.getByRole('button', { name: 'Search' }).click()
+  await page.locator('#quanitity').click()
+  await page.locator('#quanitity').fill('05')
+  await page.getByRole('button', { name: 'Buy' }).click()
+  await page.getByRole('button', { name: 'Stocky App logo' }).click()
+
+  await expect(page.locator('[data-test="portfolio-chart"]')).toBeVisible()
+})

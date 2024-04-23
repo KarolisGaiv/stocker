@@ -49,7 +49,12 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <PortfolioChart :portfolio="portfolio" :portfolioValue="totalCurrentPortfolioValue" />
+    <PortfolioChart
+      :portfolio="portfolio"
+      :portfolioValue="totalCurrentPortfolioValue"
+      data-test="portfolio-chart"
+      v-if="portfolio.length > 0"
+    />
     <div class="button-container">
       <button @click="$router.push(`/trade`)" class="trade-btn">Trade</button>
     </div>
