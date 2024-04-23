@@ -131,18 +131,36 @@ async function sellStock() {
       </div>
     </form>
 
-    <div class="stock-info" v-if="stockDetails">
+    <div class="stock-info-container" v-if="stockDetails">
       <h2>Name: {{ stockDetails.name }}</h2>
-      <h3>Ticker: {{ stockDetails.ticker }}</h3>
-      <h4>Homepage: {{ stockDetails.homepage }}</h4>
-    </div>
-
-    <div class="stock-price" v-if="stockDetails">
-      <h4>Price: ${{ stockPrice }}</h4>
+      <div class="stock-labels-wrapper">
+        <span class="stock-info-label"
+          >Ticker
+          <span>{{ stockDetails.ticker }}</span>
+        </span>
+        <span class="stock-info-label"
+          >Price
+          <span>USD {{ stockPrice }}</span>
+        </span>
+        <a
+          class="stock-info-label stock-homepage-link"
+          :href="stockDetails.homepage"
+          target="_blank"
+          >Homepage</a
+        >
+      </div>
     </div>
 
     <div v-if="historicalPrices" class="price-graph-container">
       <StockChart :historicalData="historicalPrices.results" />
+    </div>
+
+    <div class="trade-action-wrapper">
+      <h2>Action</h2>
+      <label for="quantity">Enter quantity:</label>
+      <input type="number" id="quanitity" v-model="quantity" />
+      <button @click="buyStock">Buy</button>
+      <button @click="sellStock">Sell</button>
     </div>
 
     <button @click="getRelatedStockNews">Related News</button>
@@ -154,14 +172,6 @@ async function sellStock() {
           <a :href="newsItem.article_url" target="_blank">Read More</a>
         </li>
       </ul>
-    </div>
-
-    <div class="trade-action-wrapper">
-      <h2>Action</h2>
-      <label for="quantity">Enter quantity:</label>
-      <input type="number" id="quanitity" v-model="quantity" />
-      <button @click="buyStock">Buy</button>
-      <button @click="sellStock">Sell</button>
     </div>
   </main>
 </template>
@@ -213,6 +223,34 @@ async function sellStock() {
 
   &:hover {
     background: var(--dark-blue-background-color);
+  }
+}
+
+.stock-labels-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+
+.stock-info-label {
+  background: var(--yellow-background-color);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0.2rem;
+  text-align: center;
+  justify-content: center;
+  flex: 1;
+  margin: 0 0.2rem;
+  font-weight: bold;
+}
+
+.stock-homepage-link {
+  transition: background-color 0.3s ease;
+  padding: 0.2rem 0.4rem;
+
+  &:hover {
+    background-color: #d9ba4b;
   }
 }
 </style>
