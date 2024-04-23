@@ -11,9 +11,7 @@ async function getStockPrice(stock: string) {
     )
     return response.json()
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
-    toast.error('Error fetching data: ' + errorMessage)
-    return null
+    return handleError(error)
   }
 }
 
@@ -24,9 +22,7 @@ async function getStockInformation(stock: string) {
     )
     return res.json()
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
-    toast.error('Error fetching data: ' + errorMessage)
-    return null
+    return handleError(err)
   }
 }
 
@@ -37,9 +33,7 @@ async function getStockNews(stock: string) {
     )
     return res.json()
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
-    toast.error('Error fetching data: ' + errorMessage)
-    return null
+    return handleError(err)
   }
 }
 
@@ -54,10 +48,14 @@ async function getMonthPriceHistory(stock: string) {
     `)
     return res.json()
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
-    toast.error('Error fetching data: ' + errorMessage)
-    return null
+    return handleError(err)
   }
+}
+
+function handleError(error: unknown): null {
+  const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
+  toast.error('Error fetching data: ' + errorMessage)
+  return null
 }
 
 export { getStockPrice, getStockInformation, getStockNews, getMonthPriceHistory }
