@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useToast } from 'vue-toastification'
 import StockChart from './StockChart.vue'
 import {
   getStockPrice,
@@ -33,6 +34,7 @@ interface StockHistoricalPriceResponse {
   }[]
 }
 
+const toast = useToast()
 const stockName = ref<string>('')
 const stockPrice = ref<number>(0)
 const stockDetails = ref<StockDetails | null>(null)
@@ -60,17 +62,16 @@ async function searchStock() {
 
 async function getRelatedStockNews() {
   if (!stockDetails.value) {
-    console.error('No stock details available')
+    toast.error('No stock details available')
     return
   }
   const data = await getStockNews(stockDetails.value.ticker.toUpperCase())
   stockNews.value = data.results
-  console.log(stockNews.value)
 }
 
 async function buyStock() {
   if (!stockDetails.value || quantity.value <= 0) {
-    alert('Please check the stock details and quantity')
+    toast.error('Please check the stock details and quantity')
     return
   }
 
@@ -85,16 +86,16 @@ async function buyStock() {
     }
 
     userState.buyStock(quantity.value, stockToBuy)
-    alert('Purchase sucessfull')
+    toast.success('Purchase successful')
     quantity.value = 0
   } catch (error) {
-    alert(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
+    toast.error(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
 }
 
 async function sellStock() {
   if (!stockDetails.value || quantity.value <= 0) {
-    alert('Please check the stock details and quantity')
+    toast.error('Please check the stock details and quantity')
     return
   }
 
@@ -109,10 +110,10 @@ async function sellStock() {
     }
 
     userState.sellStock(quantity.value, stockToSell)
-    alert('Sale successful')
+    toast.success('Sale successful')
     quantity.value = 0
   } catch (error) {
-    alert(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
+    toast.error(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
 }
 </script>
