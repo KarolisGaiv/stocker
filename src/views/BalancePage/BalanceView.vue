@@ -32,7 +32,12 @@ function handleTransaction(type: string): void {
 <template>
   <main class="account-balance">
     <h2>Account Balance</h2>
-    <p class="balance-info">Your current account balance is: ${{ userStore.balance }}</p>
+    <p class="balance-info">
+      Your current account balance is:
+      <span data-test="balance-display"
+        ><strong>${{ userStore.balance }}</strong></span
+      >
+    </p>
     <div class="transaction-form">
       <input
         type="number"

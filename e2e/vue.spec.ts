@@ -21,3 +21,11 @@ test('empty user portfolio shows 0 portfolio value and return', async ({ page })
   // portfolio return should be 0%
   await expect(page.getByText('%')).toHaveText('0%')
 })
+
+test('navigating to profile page', async ({ page }) => {
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Profile' }).click()
+  await expect(page).toHaveURL('/balance')
+  await expect(page.getByRole('heading', { name: 'Account Balance' })).toBeVisible()
+  await expect(page.locator('[data-test="balance-display"]')).toHaveText('$0')
+})
