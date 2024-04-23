@@ -186,7 +186,9 @@ main {
     grid-template-areas:
       'search info'
       'chart actions'
-      'chart news';
+      'chart news'
+      'stock-news stock-news';
+
     gap: 20px;
   }
 }
@@ -326,7 +328,14 @@ main {
   }
 }
 
+.stock-news {
+  grid-area: stock-news;
+}
+
 ul {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 1rem;
   list-style: none;
   padding: 0;
 }
