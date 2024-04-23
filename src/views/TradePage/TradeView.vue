@@ -155,15 +155,16 @@ async function sellStock() {
       <StockChart :historicalData="historicalPrices.results" />
     </div>
 
-    <div class="trade-action-wrapper">
-      <h2>Action</h2>
-      <label for="quantity">Enter quantity:</label>
-      <input type="number" id="quanitity" v-model="quantity" />
-      <button @click="buyStock">Buy</button>
-      <button @click="sellStock">Sell</button>
+    <div v-if="historicalPrices" class="trade-action-wrapper">
+      <label for="quantity">Enter quantity</label>
+      <div class="input-group">
+        <input type="number" id="quanitity" v-model="quantity" class="stock-quantity" />
+        <button @click="buyStock" class="buy-btn">Buy</button>
+        <button @click="sellStock" class="sell-btn">Sell</button>
+      </div>
     </div>
 
-    <button @click="getRelatedStockNews">Related News</button>
+    <button v-if="historicalPrices" @click="getRelatedStockNews">Related News</button>
     <div class="stock-news" v-if="stockNews.length > 0">
       <ul>
         <li v-for="(newsItem, index) in stockNews" :key="index">
@@ -197,9 +198,18 @@ async function sellStock() {
     height: 2.5rem;
     padding: 0.5rem 1rem;
   }
+
+  & .buy-btn:hover {
+    background: var(--lime-background-color);
+  }
+
+  & .sell-btn:hover {
+    background: var(--red-background-color);
+  }
 }
 
-.stock-name {
+.stock-name,
+.stock-quantity {
   border: 0;
   border-radius: 0.5rem;
   flex-grow: 1;
@@ -213,7 +223,9 @@ async function sellStock() {
   }
 }
 
-.search-btn {
+.search-btn,
+.buy-btn,
+.sell-btn {
   cursor: pointer;
   background: var(--light-blue-background-color);
   border: none;
@@ -255,6 +267,21 @@ async function sellStock() {
 }
 
 .price-graph-container {
-  margin: 2rem 0;
+  margin: 1rem 0;
+}
+
+.trade-action-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  & label {
+    font-size: 1.5rem;
+  }
+}
+
+.buy-btn,
+.sell-btn {
+  width: 20%;
+  margin: 0 0.2rem;
 }
 </style>
