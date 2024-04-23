@@ -41,6 +41,11 @@
   --yellow-background-color: #eec759;
   --lime-background-color: #d2de32;
   --red-background-color: #ff6969;
+
+  /* media queries */
+
+  --breakpoint-tablet: 650px;
+  --breakpoint-laptop: 1024px;
 }
 
 @media (prefers-color-scheme: dark) {

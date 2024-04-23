@@ -50,17 +50,40 @@ onMounted(async () => {
       </div>
     </div>
     <PortfolioChart :portfolio="portfolio" :portfolioValue="totalCurrentPortfolioValue" />
-    <button @click="$router.push(`/trade`)" class="trade-btn">Trade</button>
+    <div class="button-container">
+      <button @click="$router.push(`/trade`)" class="trade-btn">Trade</button>
+    </div>
   </main>
 </template>
 
 <style scoped>
 main {
   text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 1024px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'content chart'
+      'button chart';
+    gap: 10px;
+    height: 100vh;
+    align-items: start;
+    justify-content: center;
+    margin: auto;
+    width: 90%;
+    max-width: 1200px;
+  }
 }
 
 .container {
   margin: 1rem 0;
+  width: 100%;
+  grid-area: content;
 }
 
 .portfolio-details {
@@ -78,6 +101,17 @@ main {
   align-items: center;
   padding: 0.2rem 1rem;
   min-width: 150px;
+
+  @media (min-width: var(--breakpoint-tablet)) {
+    padding: 1rem;
+  }
+}
+
+.button-container {
+  grid-area: button;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .trade-btn {
@@ -97,6 +131,10 @@ main {
   &:hover {
     transform: scale(1.05);
     box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (min-width: 1024px) {
+    width: 70%;
   }
 }
 

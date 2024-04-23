@@ -65,5 +65,11 @@ watch(() => props.portfolio, drawChart, { deep: true })
 <style scoped>
 .chart-container {
   margin: 2rem 0;
+  max-width: 500px;
+  grid-area: chart;
+
+  @media (min-width: var(--breakpoint-tablet)) {
+    margin: 1rem;
+  }
 }
 </style>
