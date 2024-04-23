@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { storageService } from '@/utils/storage'
 import { getStockPrice } from '@/api/stock_api'
 import { format } from 'date-fns'
+import { useToast } from 'vue-toastification'
 
 const MAX_PORTFOLIO_SIZE = 5
 
@@ -18,6 +19,8 @@ interface Stock {
   lastUpdated: string
   quantity: number
 }
+
+const toast = useToast()
 
 export const useUserState = defineStore('user', {
   state: (): User => {
@@ -133,10 +136,10 @@ export const useUserState = defineStore('user', {
               stock.lastUpdated = today
               updated = true
             } else {
-              console.error('No valid data for stock')
+              toast.error('No valid data for stock')
             }
           } catch {
-            console.error(`Failed to update stock price for ${stock.name}`)
+            toast.error(`Failed to update stock price for ${stock.name}`)
           }
         }
       }

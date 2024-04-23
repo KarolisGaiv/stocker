@@ -1,6 +1,8 @@
 import { format, subMonths } from 'date-fns'
+import { useToast } from 'vue-toastification'
 
 const api_key = import.meta.env.VITE_STOCK_API_KEY
+const toast = useToast()
 
 async function getStockPrice(stock: string) {
   try {
@@ -9,7 +11,8 @@ async function getStockPrice(stock: string) {
     )
     return response.json()
   } catch (error) {
-    console.error('Error fetching data: ', error)
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
+    toast.error('Error fetching data: ' + errorMessage)
     return null
   }
 }
@@ -21,7 +24,8 @@ async function getStockInformation(stock: string) {
     )
     return res.json()
   } catch (err) {
-    console.error('Error, fetching data', err)
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+    toast.error('Error fetching data: ' + errorMessage)
     return null
   }
 }
@@ -33,7 +37,8 @@ async function getStockNews(stock: string) {
     )
     return res.json()
   } catch (err) {
-    console.error('Error fetching data: ', err)
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+    toast.error('Error fetching data: ' + errorMessage)
     return null
   }
 }
@@ -49,7 +54,8 @@ async function getMonthPriceHistory(stock: string) {
     `)
     return res.json()
   } catch (err) {
-    console.error('Error while fetching historical data:', err)
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+    toast.error('Error fetching data: ' + errorMessage)
     return null
   }
 }
