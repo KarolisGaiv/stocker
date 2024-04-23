@@ -86,6 +86,7 @@ async function buyStock() {
 
     userState.buyStock(quantity.value, stockToBuy)
     alert('Purchase sucessfull')
+    quantity.value = 0
   } catch (error) {
     alert(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
@@ -109,6 +110,7 @@ async function sellStock() {
 
     userState.sellStock(quantity.value, stockToSell)
     alert('Sale successful')
+    quantity.value = 0
   } catch (error) {
     alert(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
