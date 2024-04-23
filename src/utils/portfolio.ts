@@ -33,6 +33,9 @@ export function calculateCurrentValue(input: Stock | Stock[]): number {
 }
 
 export function calculatePortfolioReturn(currentValue: number, investedValue: number): number {
+  if (investedValue === 0) {
+    return 0
+  }
   const result = ((currentValue - investedValue) / investedValue) * 100
   return parseFloat(result.toFixed(2))
 }
