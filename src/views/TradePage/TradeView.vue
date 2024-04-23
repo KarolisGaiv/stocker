@@ -169,10 +169,8 @@ async function sellStock() {
     </button>
     <div class="stock-news" v-if="stockNews.length > 0">
       <ul>
-        <li v-for="(newsItem, index) in stockNews" :key="index">
-          <h5>{{ newsItem.title }}</h5>
-          <p>{{ newsItem.author }}</p>
-          <a :href="newsItem.article_url" target="_blank">Read More</a>
+        <li v-for="(newsItem, index) in stockNews" :key="index" class="news-card">
+          <a :href="newsItem.article_url" target="_blank">{{ newsItem.title }}</a>
         </li>
       </ul>
     </div>
@@ -247,7 +245,8 @@ async function sellStock() {
   margin: 1rem 0;
 }
 
-.stock-info-label {
+.stock-info-label,
+.news-card {
   background: var(--yellow-background-color);
   border-radius: 0.5rem;
   display: flex;
@@ -260,7 +259,8 @@ async function sellStock() {
   font-weight: bold;
 }
 
-.stock-homepage-link {
+.stock-homepage-link,
+.news-card {
   transition: background-color 0.3s ease;
   padding: 0.2rem 0.4rem;
 
@@ -291,5 +291,25 @@ async function sellStock() {
 .news-btn {
   padding: 1rem;
   width: 100%;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.news-card {
+  color: black;
+  margin: 0.5rem 0;
+  border: 1px solid;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  padding: 0.5rem;
+
+  & a {
+    color: black;
+  }
 }
 </style>
