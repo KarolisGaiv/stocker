@@ -164,7 +164,9 @@ async function sellStock() {
       </div>
     </div>
 
-    <button v-if="historicalPrices" @click="getRelatedStockNews">Related News</button>
+    <button v-if="historicalPrices" @click="getRelatedStockNews" class="news-btn">
+      Related News
+    </button>
     <div class="stock-news" v-if="stockNews.length > 0">
       <ul>
         <li v-for="(newsItem, index) in stockNews" :key="index">
@@ -225,7 +227,8 @@ async function sellStock() {
 
 .search-btn,
 .buy-btn,
-.sell-btn {
+.sell-btn,
+.news-btn {
   cursor: pointer;
   background: var(--light-blue-background-color);
   border: none;
@@ -283,5 +286,10 @@ async function sellStock() {
 .sell-btn {
   width: 20%;
   margin: 0 0.2rem;
+}
+
+.news-btn {
+  padding: 1rem;
+  width: 100%;
 }
 </style>
