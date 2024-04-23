@@ -29,3 +29,45 @@ test('navigating to profile page', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Account Balance' })).toBeVisible()
   await expect(page.locator('[data-test="balance-display"]')).toHaveText('$0')
 })
+
+test('deposit money to balance', async ({ page }) => {
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Profile' }).click()
+  await expect(page.locator('[data-test="balance-display"]')).toHaveText('$0')
+
+  await page.getByPlaceholder('Enter amount').click()
+  await page.getByPlaceholder('Enter amount').fill('6000')
+  await page.getByRole('button', { name: 'Deposit' }).click()
+
+  await expect(page.getByText('You have deposited $6000 succesfully ×')).toBeVisible()
+  await expect(page.locator('[data-test="balance-display"]')).toHaveText('$6000')
+})
+
+test('withdraw money from balance', async ({ page }) => {
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Profile' }).click()
+  await page.getByPlaceholder('Enter amount').click()
+  await page.getByPlaceholder('Enter amount').fill('6000')
+  await page.getByRole('button', { name: 'Deposit' }).click()
+
+  await expect(page.locator('[data-test="balance-display"]')).toHaveText('$6000')
+  await page.getByPlaceholder('Enter amount').click()
+  await page.getByPlaceholder('Enter amount').fill('3000')
+  await page.getByRole('button', { name: 'Withdraw' }).click()
+
+  await expect(page.getByText('You have withdrawn $3000 succesfully ×')).toBeVisible()
+  await expect(page.locator('[data-test="balance-display"]')).toHaveText('$3000')
+})
+
+test('withdraw more than currently is in balance', async ({ page }) => {
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Profile' }).click()
+  await page.getByPlaceholder('Enter amount').click()
+  await page.getByPlaceholder('Enter amount').fill('6000')
+  await page.getByRole('button', { name: 'Deposit' }).click()
+
+  await page.getByPlaceholder('Enter amount').click()
+  await page.getByPlaceholder('Enter amount').fill('189198198000')
+  await page.getByRole('button', { name: 'Withdraw' }).click()
+  await expect(page.getByText('Insufficient balance ×')).toBeVisible()
+})
