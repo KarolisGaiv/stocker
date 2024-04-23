@@ -71,3 +71,11 @@ test('withdraw more than currently is in balance', async ({ page }) => {
   await page.getByRole('button', { name: 'Withdraw' }).click()
   await expect(page.getByText('Insufficient balance ×')).toBeVisible()
 })
+
+test('navigate to trade page', async ({ page }) => {
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Trade' }).click()
+  await expect(page).toHaveURL('/trade')
+  await expect(page.getByText('Search for Stock')).toBeVisible()
+  await expect(page.getByPlaceholder('Enter Company Symbol')).toBeVisible()
+})
