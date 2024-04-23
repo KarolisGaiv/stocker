@@ -1,26 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserState } from '@/store/userState'
+import { useToast } from 'vue-toastification'
 
 const userStore = useUserState()
 const amount = ref<number>(0)
+const toast = useToast()
 
 function handleTransaction(type: string): void {
   if (amount.value < 0) {
-    alert('Please enter a positive number')
+    toast.error('Please enter a positive number')
     return
   }
 
   try {
     if (type === 'deposit') {
       userStore.deposit(amount.value)
+      toast.success(`You have deposited $${amount.value} succesfully`)
     } else if (type === 'withdraw') {
       userStore.withdraw(amount.value)
+      toast.success(`You have withdrawn $${amount.value} succesfully`)
     }
     amount.value = 0
   } catch (error) {
     const errorMsg = (error as Error).message
-    alert(errorMsg)
+    toast.error(errorMsg)
   }
 }
 </script>
