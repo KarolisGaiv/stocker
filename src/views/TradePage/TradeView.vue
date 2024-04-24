@@ -149,6 +149,7 @@ function isInUserPortfolio(ticker: string): boolean {
           placeholder="Enter Company Symbol"
           v-model="stockName"
           class="stock-name"
+          required
         />
         <button type="submit" class="search-btn">Search</button>
       </div>
