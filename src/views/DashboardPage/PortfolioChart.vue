@@ -64,7 +64,7 @@ watch(() => props.portfolio, drawChart, { deep: true })
 
 <style scoped>
 .chart-container {
-  margin-bottom: 1rem;
+  margin: 1rem 0;
   max-width: 500px;
   width: 100%;
   grid-area: chart;

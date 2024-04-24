@@ -130,7 +130,13 @@ async function sellStock() {
 <template>
   <main>
     <form @submit.prevent="searchStock" class="search-form">
-      <label class="stock-search-label" for="stockName">Search for Stock</label>
+      <div class="header">
+        <label class="stock-search-label" for="stockName">Search for Stock</label>
+        <div class="balance-holder">
+          <p>Balance: ${{ userState.balance }}</p>
+        </div>
+      </div>
+
       <div class="input-group">
         <input
           type="text"
@@ -213,6 +219,12 @@ main {
 
   & label {
     font-size: 1.5rem;
+  }
+
+  & .header {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
   }
 }
 
@@ -321,6 +333,20 @@ main {
 
   @media (min-width: 1024px) {
     margin: 1rem 0;
+  }
+}
+
+.balance-holder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--yellow-background-color);
+  border-radius: 0.5rem;
+  text-align: center;
+  padding: 0.5rem 1rem;
+
+  & p {
+    font-weight: bold;
   }
 }
 
