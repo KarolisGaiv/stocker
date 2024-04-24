@@ -4,15 +4,6 @@ import { useUserState } from './userState'
 import { format, subDays } from 'date-fns'
 import * as stock_api from '../api/stock_api'
 
-// interface Stock {
-//   name: string
-//   ticker: string
-//   price: number
-//   purchase_price: number
-//   quantity: number
-//   lastUpdated: string
-// }
-
 const stockFixture = {
   name: 'Mocked Stock',
   ticker: 'MCK',
