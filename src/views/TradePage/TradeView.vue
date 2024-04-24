@@ -18,10 +18,6 @@ interface StockDetails {
   homepage: string
 }
 
-interface StockPriceDetails {
-  results: { o: number }[]
-}
-
 interface NewsItem {
   title: string
   author: string
