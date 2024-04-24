@@ -34,11 +34,11 @@ onMounted(async () => {
       <div class="portfolio-details">
         <div class="portfolio-value-container">
           <p>Current Value</p>
-          <p>${{ totalCurrentPortfolioValue }}</p>
+          <p data-test="portfolio-value">${{ totalCurrentPortfolioValue }}</p>
         </div>
         <div class="portfolio-value-container">
           <p>Balance</p>
-          <p>${{ balance }}</p>
+          <p data-test="balance">${{ balance }}</p>
         </div>
         <div
           class="portfolio-return-container"
@@ -49,7 +49,7 @@ onMounted(async () => {
           }"
         >
           <p>Total Return</p>
-          <p>{{ portfolioReturn }}%</p>
+          <p data-test="portfolio-return">{{ portfolioReturn }}%</p>
         </div>
       </div>
     </div>
@@ -100,6 +100,7 @@ main {
   display: flex;
   justify-content: space-evenly;
   margin: 1rem 0;
+  flex-wrap: wrap-reverse;
 }
 
 .portfolio-value-container,
@@ -158,5 +159,13 @@ main {
 
 .negative-return {
   background: var(--red-background-color);
+}
+
+.portfolio-return-container {
+  margin: 0.2rem;
+
+  @media (min-width: 650px) {
+    margin: 0;
+  }
 }
 </style>

@@ -5,26 +5,30 @@ test('navigating to dashboard', async ({ page }) => {
   await expect(page.getByRole('banner')).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Stocky App' })).toBeVisible()
   await expect(page.getByRole('img', { name: 'Stocky App logo' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Profile' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Balance' })).toBeVisible()
   await expect(page.getByText('Your Portfolio DetailsCurrent')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Trade' })).toBeVisible()
 })
 
 test('empty user portfolio shows 0 portfolio value and return', async ({ page }) => {
   await page.goto('./')
-  await expect(page.getByText('Current Value$')).toBeVisible()
-  await expect(page.getByText('Total Return0%')).toBeVisible()
+  await expect(page.locator('[data-test="portfolio-value"]')).toBeVisible()
+  await expect(page.locator('[data-test="balance"]')).toBeVisible()
+  await expect(page.locator('[data-test="portfolio-return"]')).toBeVisible()
 
   // current value should be $0
-  await expect(page.getByText('$')).toHaveText('$0')
+  await expect(page.locator('[data-test="portfolio-value"]')).toHaveText('$0')
+
+  // balance should be $0
+  await expect(page.locator('[data-test="balance"]')).toHaveText('$0')
 
   // portfolio return should be 0%
-  await expect(page.getByText('%')).toHaveText('0%')
+  await expect(page.locator('[data-test="portfolio-return"]')).toHaveText('0%')
 })
 
 test('navigating to profile page', async ({ page }) => {
   await page.goto('./')
-  await page.getByRole('button', { name: 'Profile' }).click()
+  await page.getByRole('button', { name: 'Balance' }).click()
   await expect(page).toHaveURL('/balance')
   await expect(page.getByRole('heading', { name: 'Account Balance' })).toBeVisible()
   await expect(page.locator('[data-test="balance-display"]')).toHaveText('$0')
@@ -32,7 +36,7 @@ test('navigating to profile page', async ({ page }) => {
 
 test('deposit money to balance', async ({ page }) => {
   await page.goto('./')
-  await page.getByRole('button', { name: 'Profile' }).click()
+  await page.getByRole('button', { name: 'Balance' }).click()
   await expect(page.locator('[data-test="balance-display"]')).toHaveText('$0')
 
   await page.getByPlaceholder('Enter amount').click()
@@ -45,7 +49,7 @@ test('deposit money to balance', async ({ page }) => {
 
 test('withdraw money from balance', async ({ page }) => {
   await page.goto('./')
-  await page.getByRole('button', { name: 'Profile' }).click()
+  await page.getByRole('button', { name: 'Balance' }).click()
   await page.getByPlaceholder('Enter amount').click()
   await page.getByPlaceholder('Enter amount').fill('6000')
   await page.getByRole('button', { name: 'Deposit' }).click()
@@ -61,7 +65,7 @@ test('withdraw money from balance', async ({ page }) => {
 
 test('withdraw more than currently is in balance', async ({ page }) => {
   await page.goto('./')
-  await page.getByRole('button', { name: 'Profile' }).click()
+  await page.getByRole('button', { name: 'Balance' }).click()
   await page.getByPlaceholder('Enter amount').click()
   await page.getByPlaceholder('Enter amount').fill('6000')
   await page.getByRole('button', { name: 'Deposit' }).click()
@@ -110,7 +114,7 @@ test('show portfolio pie chart after filling portfolio', async ({ page }) => {
 
   await expect(page.locator('[data-test="portfolio-chart"]')).toBeHidden()
 
-  await page.getByRole('button', { name: 'Profile' }).click()
+  await page.getByRole('button', { name: 'Balance' }).click()
   await page.getByPlaceholder('Enter amount').click()
   await page.getByPlaceholder('Enter amount').fill('6000')
   await page.getByRole('button', { name: 'Deposit' }).click()
