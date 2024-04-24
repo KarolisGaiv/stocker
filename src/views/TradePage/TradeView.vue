@@ -125,6 +125,11 @@ async function sellStock() {
     toast.error(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
 }
+
+function isInUserPortfolio(ticker: string): boolean {
+  if (!ticker) return false
+  return userState.portfolio.some((stock) => stock.ticker === ticker)
+}
 </script>
 
 <template>
@@ -179,6 +184,24 @@ async function sellStock() {
         <input type="number" id="quanitity" v-model="quantity" class="stock-quantity" />
         <button @click="buyStock" class="buy-btn">Buy</button>
         <button @click="sellStock" class="sell-btn">Sell</button>
+      </div>
+
+      <div
+        v-if="isInUserPortfolio(stockDetails!.ticker)"
+        class="portfolio-holdings-wrapper"
+        data-test="portfolio-holdings"
+      >
+        <h3>Holdings In Portfolio</h3>
+        <div class="holdings-data">
+          <span class="stock-info-label"
+            >Quantity
+            <span>{{ userState.getStockFromPortfolio(stockDetails!.ticker)?.quantity }}</span>
+          </span>
+          <span class="stock-info-label"
+            >Purchase Price
+            <span>{{ userState.getStockFromPortfolio(stockDetails!.ticker)?.purchase_price }}</span>
+          </span>
+        </div>
       </div>
     </div>
 
@@ -348,6 +371,11 @@ main {
   & p {
     font-weight: bold;
   }
+}
+
+.holdings-data {
+  display: flex;
+  margin: 1rem 0;
 }
 
 .buy-btn,

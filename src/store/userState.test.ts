@@ -295,4 +295,14 @@ describe('userState', () => {
       expect(userStore.updateUser).not.toHaveBeenCalled()
     })
   })
+
+  describe('getStockFromPortfolio function', () => {
+    it('gets stock object from portfolio based on provided ticker', () => {
+      userStore.portfolio = [stockFixture]
+      const tickerToFind = 'MCK'
+      const result = userStore.getStockFromPortfolio(tickerToFind)
+
+      expect(result).toEqual(stockFixture)
+    })
+  })
 })

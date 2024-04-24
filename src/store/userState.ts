@@ -146,6 +146,10 @@ export const useUserState = defineStore('user', {
       if (updated) {
         this.updateUser({ portfolio: this.portfolio })
       }
+    },
+
+    getStockFromPortfolio(ticker: string) {
+      return this.portfolio.find((stock) => stock.ticker === ticker)
     }
   }
 })
