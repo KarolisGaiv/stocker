@@ -8,7 +8,7 @@ const amount = ref<number>(0)
 const toast = useToast()
 
 function handleTransaction(type: string): void {
-  if (amount.value < 0) {
+  if (amount.value <= 0) {
     toast.error('Please enter a positive number')
     return
   }
