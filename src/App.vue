@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import logo from './assets/stocky-icon.png'
+import { computed } from 'vue'
+
+const route = useRoute()
+const router = useRouter()
+
+const buttonLabel = computed(() => (route.path === '/balance' ? 'Home' : 'Balance'))
+const buttonAction = computed(() => (route.path === '/balance' ? '/' : '/balance'))
 </script>
 
 <template>
@@ -9,7 +17,7 @@ import logo from './assets/stocky-icon.png'
       <img :src="logo" alt="Stocky App logo" />
     </button>
     <h1>Stocky App</h1>
-    <button @click="$router.push('/balance')" class="profile-btn">Balance</button>
+    <button @click="router.push(buttonAction)" class="profile-btn">{{ buttonLabel }}</button>
   </header>
   <RouterView />
 </template>
