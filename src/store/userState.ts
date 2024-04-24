@@ -61,10 +61,6 @@ export const useUserState = defineStore('user', {
     buyStock(orderQuantity: number, orderInfo: Stock) {
       const totalOrderPrice = orderQuantity * orderInfo.price
 
-      if (this.portfolio.length === MAX_PORTFOLIO_SIZE) {
-        throw new Error(`Cannot have more than ${MAX_PORTFOLIO_SIZE} stocks in portfolio`)
-      }
-
       if (totalOrderPrice > this.balance) {
         throw new Error('Insufficient balance')
       }
@@ -73,16 +69,24 @@ export const useUserState = defineStore('user', {
         (stock) => stock.ticker === orderInfo.ticker
       )
 
-      // if stock already exist in portfolio update quantity and purchase price
+      // if stock exists in portfolio, update quantity and purchase price
       if (existingStockIndex !== -1) {
         const existingStock = this.portfolio[existingStockIndex]
         const oldTotalCost = existingStock.purchase_price * existingStock.quantity
         const newTotalCost = oldTotalCost + orderInfo.price * orderQuantity
         existingStock.quantity += orderQuantity
 
-        existingStock.purchase_price = newTotalCost / existingStock.quantity
+        existingStock.purchase_price = parseFloat(
+          (newTotalCost / existingStock.quantity).toFixed(2)
+        )
         existingStock.lastUpdated = orderInfo.lastUpdated
       } else {
+        // if stock does not exist and portfolio is at max size, throw error
+        if (this.portfolio.length === MAX_PORTFOLIO_SIZE) {
+          throw new Error(`Cannot have more than ${MAX_PORTFOLIO_SIZE} stocks in portfolio`)
+        }
+
+        // if stock does not exist, add to portfolio
         const trade = {
           name: orderInfo.name,
           ticker: orderInfo.ticker,
@@ -93,8 +97,10 @@ export const useUserState = defineStore('user', {
         }
         this.portfolio.push(trade)
       }
-      this.balance -= orderQuantity * orderInfo.price
+
+      this.balance -= totalOrderPrice
       this.balance = parseFloat(this.balance.toFixed(2))
+
       this.updateUser({ balance: this.balance, portfolio: this.portfolio })
     },
 

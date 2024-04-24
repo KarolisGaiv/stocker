@@ -198,8 +198,10 @@ function isInUserPortfolio(ticker: string): boolean {
             <span>{{ userState.getStockFromPortfolio(stockDetails!.ticker)?.quantity }}</span>
           </span>
           <span class="stock-info-label"
-            >Purchase Price
-            <span>{{ userState.getStockFromPortfolio(stockDetails!.ticker)?.purchase_price }}</span>
+            >Purchase Price (avg)
+            <span
+              >${{ userState.getStockFromPortfolio(stockDetails!.ticker)?.purchase_price }}</span
+            >
           </span>
         </div>
       </div>
