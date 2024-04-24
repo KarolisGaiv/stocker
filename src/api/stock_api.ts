@@ -9,9 +9,10 @@ async function getStockPrice(stock: string) {
     const response = await fetch(
       `https://api.polygon.io/v2/aggs/ticker/${stock}/prev?adjusted=true&apiKey=${api_key}`
     )
-    return response.json()
+    return handleAPIResponse(response)
   } catch (error) {
-    return handleError(error)
+    toast.error('Network error or service unavailable')
+    return null
   }
 }
 
@@ -21,8 +22,9 @@ async function getStockInformation(stock: string) {
       `https://api.polygon.io/v3/reference/tickers/${stock}?apiKey=${api_key}`
     )
     return res.json()
-  } catch (err) {
-    return handleError(err)
+  } catch (error) {
+    toast.error('Network error or service unavailable')
+    return null
   }
 }
 
@@ -32,8 +34,9 @@ async function getStockNews(stock: string) {
       `https://api.polygon.io/v2/reference/news?ticker=${stock}&apiKey=${api_key}`
     )
     return res.json()
-  } catch (err) {
-    return handleError(err)
+  } catch (error) {
+    toast.error('Network error or service unavailable')
+    return null
   }
 }
 
@@ -47,15 +50,33 @@ async function getMonthPriceHistory(stock: string) {
       await fetch(`https://api.polygon.io/v2/aggs/ticker/${stock}/range/1/day/${from}/${today}?adjusted=true&sort=asc&limit=120&apiKey=${api_key}
     `)
     return res.json()
-  } catch (err) {
-    return handleError(err)
+  } catch (error) {
+    toast.error('Network error or service unavailable')
+    return null
   }
 }
 
-function handleError(error: unknown): null {
-  const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
-  toast.error('Error fetching data: ' + errorMessage)
-  return null
+async function handleAPIResponse(response: Response) {
+  if (!response.ok) {
+    const errData = await response.json()
+
+    let errorMessage = 'An unexpected error occured'
+    if (errData.status) {
+      switch (errData.status) {
+        case 'NOT_FOUND':
+          errorMessage = 'Ticker not found'
+          break
+        case 'ERROR':
+          errorMessage = errData.error || 'An error occured'
+          break
+        default:
+          errorMessage = errData.message || errorMessage
+      }
+    }
+    toast.error(errorMessage)
+    return null
+  }
+  return await response.json()
 }
 
 export { getStockPrice, getStockInformation, getStockNews, getMonthPriceHistory }

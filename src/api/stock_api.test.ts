@@ -6,6 +6,7 @@ global.fetch = vi.fn()
 describe('getStockPrice function ', () => {
   it('fetches stock price successfully', async () => {
     vi.mocked(fetch).mockResolvedValue({
+      ok: true,
       json: () =>
         Promise.resolve({
           ticker: 'MCKD',
