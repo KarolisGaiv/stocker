@@ -5,6 +5,7 @@ const api_key = import.meta.env.VITE_STOCK_API_KEY
 const toast = useToast()
 
 async function getStockPrice(stock: string) {
+  stock = stock.toUpperCase()
   try {
     const response = await fetch(
       `https://api.polygon.io/v2/aggs/ticker/${stock}/prev?adjusted=true&apiKey=${api_key}`
@@ -17,6 +18,7 @@ async function getStockPrice(stock: string) {
 }
 
 async function getStockInformation(stock: string) {
+  stock = stock.toUpperCase()
   try {
     const res = await fetch(
       `https://api.polygon.io/v3/reference/tickers/${stock}?apiKey=${api_key}`
@@ -29,6 +31,7 @@ async function getStockInformation(stock: string) {
 }
 
 async function getStockNews(stock: string) {
+  stock = stock.toUpperCase()
   try {
     const res = await fetch(
       `https://api.polygon.io/v2/reference/news?ticker=${stock}&apiKey=${api_key}`

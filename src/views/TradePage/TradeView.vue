@@ -14,7 +14,6 @@ import { format } from 'date-fns'
 interface StockDetails {
   name: string
   ticker: string
-  description: string
   homepage: string
 }
 
@@ -31,41 +30,42 @@ interface StockHistoricalPriceResponse {
 }
 
 const toast = useToast()
+const userState = useUserState()
+
 const stockName = ref<string>('')
 const stockPrice = ref<number>(0)
 const stockDetails = ref<StockDetails | null>(null)
 const stockNews = ref<NewsItem[]>([])
 const quantity = ref<number>(0)
-const userState = useUserState()
 const historicalPrices = ref<StockHistoricalPriceResponse | null>(null)
 
 async function searchStock() {
   try {
-    const priceRes = await getStockPrice(stockName.value.toUpperCase())
+    const priceRes = await getStockPrice(stockName.value)
     if (!priceRes || !priceRes.results) {
-      toast.error('Stock information is currently unavailable')
+      handleStockError()
       return
     }
-    const infoRes = await getStockInformation(stockName.value.toUpperCase())
+    stockPrice.value = priceRes.results[0].o
+
+    const infoRes = await getStockInformation(stockName.value)
     if (!infoRes || !infoRes.results) {
-      toast.error('Stock information is currently unavailable')
+      handleStockError()
       return
     }
-    const histPriceRes = await getMonthPriceHistory(stockName.value.toUpperCase())
+
+    const histPriceRes = await getMonthPriceHistory(stockName.value)
     if (!histPriceRes || !histPriceRes.results) {
-      toast.error('Stock information is currently unavailable')
+      handleStockError()
       return
     }
+    historicalPrices.value = histPriceRes
 
     stockDetails.value = {
       name: infoRes.results.name,
       ticker: infoRes.results.ticker,
-      description: infoRes.results.description,
       homepage: infoRes.results.homepage_url
     }
-
-    stockPrice.value = priceRes.results[0].o
-    historicalPrices.value = histPriceRes
   } catch (error) {
     toast.error((error as Error).message || 'An error occurred during the search.')
   } finally {
@@ -73,12 +73,16 @@ async function searchStock() {
   }
 }
 
+function handleStockError() {
+  toast.error('Stock information is currently unavailable')
+}
+
 async function getRelatedStockNews() {
   if (!stockDetails.value) {
-    toast.error('No stock details available')
+    handleStockError()
     return
   }
-  const data = await getStockNews(stockDetails.value.ticker.toUpperCase())
+  const data = await getStockNews(stockDetails.value.ticker)
   stockNews.value = data.results
 }
 
