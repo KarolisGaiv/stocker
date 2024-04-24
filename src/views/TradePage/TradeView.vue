@@ -44,20 +44,33 @@ const userState = useUserState()
 const historicalPrices = ref<StockHistoricalPriceResponse | null>(null)
 
 async function searchStock() {
-  const price: StockPriceDetails = await getStockPrice(stockName.value.toUpperCase())
-  const res = await getStockInformation(stockName.value.toUpperCase())
-  historicalPrices.value = await getMonthPriceHistory(stockName.value)
+  try {
+    const priceRes = await getStockPrice(stockName.value.toUpperCase())
+    if (!priceRes.results) {
+      toast.error('Stock not found')
+      return
+    }
+    const infoRes = await getStockInformation(stockName.value.toUpperCase())
+    if (!infoRes.results) {
+      toast.error('Stock not found')
+      return
+    }
+    const histPriceRes = await getMonthPriceHistory(stockName.value.toUpperCase())
 
-  stockDetails.value = {
-    name: res.results.name,
-    ticker: res.results.ticker,
-    description: res.results.description,
-    homepage: res.results.homepage_url
+    stockDetails.value = {
+      name: infoRes.results.name,
+      ticker: infoRes.results.ticker,
+      description: infoRes.results.description,
+      homepage: infoRes.results.homepage_url
+    }
+
+    stockPrice.value = priceRes.results[0].o
+    historicalPrices.value = histPriceRes
+  } catch (error) {
+    toast.error((error as Error).message || 'An error occurred during the search.')
+  } finally {
+    stockName.value = ''
   }
-
-  stockPrice.value = price.results[0].o
-
-  stockName.value = ''
 }
 
 async function getRelatedStockNews() {
