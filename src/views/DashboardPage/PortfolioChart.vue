@@ -64,9 +64,11 @@ watch(() => props.portfolio, drawChart, { deep: true })
 
 <style scoped>
 .chart-container {
-  margin: 2rem 0;
+  margin-bottom: 1rem;
   max-width: 500px;
+  width: 100%;
   grid-area: chart;
+  aspect-ratio: 1;
 
   @media (min-width: var(--breakpoint-tablet)) {
     margin: 1rem;
