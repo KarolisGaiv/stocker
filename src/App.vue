@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { RouterView } from 'vue-router'
 import { useRoute, useRouter } from 'vue-router'
 import logo from './assets/stocky-icon.png'

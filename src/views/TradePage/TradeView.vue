@@ -42,16 +42,20 @@ const historicalPrices = ref<StockHistoricalPriceResponse | null>(null)
 async function searchStock() {
   try {
     const priceRes = await getStockPrice(stockName.value.toUpperCase())
-    if (!priceRes.results) {
-      toast.error('Stock not found')
+    if (!priceRes || !priceRes.results) {
+      toast.error('Stock information is currently unavailable')
       return
     }
     const infoRes = await getStockInformation(stockName.value.toUpperCase())
-    if (!infoRes.results) {
-      toast.error('Stock not found')
+    if (!infoRes || !infoRes.results) {
+      toast.error('Stock information is currently unavailable')
       return
     }
     const histPriceRes = await getMonthPriceHistory(stockName.value.toUpperCase())
+    if (!histPriceRes || !histPriceRes.results) {
+      toast.error('Stock information is currently unavailable')
+      return
+    }
 
     stockDetails.value = {
       name: infoRes.results.name,
