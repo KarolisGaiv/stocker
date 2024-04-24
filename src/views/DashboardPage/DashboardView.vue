@@ -8,7 +8,7 @@ import {
 import { computed, onMounted } from 'vue'
 import PortfolioChart from './PortfolioChart.vue'
 
-const { portfolio, updatePortfolioPrices } = useUserState()
+const { balance, portfolio, updatePortfolioPrices } = useUserState()
 
 const totalInvested = computed(() => {
   return calculateTotalInvested(portfolio)
@@ -35,6 +35,10 @@ onMounted(async () => {
         <div class="portfolio-value-container">
           <p>Current Value</p>
           <p>${{ totalCurrentPortfolioValue }}</p>
+        </div>
+        <div class="portfolio-value-container">
+          <p>Balance</p>
+          <p>${{ balance }}</p>
         </div>
         <div
           class="portfolio-return-container"

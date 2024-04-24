@@ -9,7 +9,7 @@ import logo from './assets/stocky-icon.png'
       <img :src="logo" alt="Stocky App logo" />
     </button>
     <h1>Stocky App</h1>
-    <button @click="$router.push('/balance')" class="profile-btn">Profile</button>
+    <button @click="$router.push('/balance')" class="profile-btn">Balance</button>
   </header>
   <RouterView />
 </template>
