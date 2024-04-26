@@ -1,5 +1,6 @@
-import { getStockPrice, getStockInformation, getStockNews } from './stock_api'
+import { getStockPrice, getStockInformation, getStockNews, getMonthPriceHistory } from './stock_api'
 import { describe, expect, vi, it } from 'vitest'
+import { format, subMonths } from 'date-fns'
 
 global.fetch = vi.fn()
 
@@ -131,5 +132,36 @@ describe('getStockNews function', () => {
     const stock = 'mckd'
     await getStockNews(stock)
     expect(fetch).toHaveBeenCalledWith(expect.stringContaining('news?ticker=MCKD&'))
+  })
+})
+
+describe('getMonthPriceHistory function', () => {
+  it('fetches month price history successfully', async () => {
+    const today = format(new Date(), 'yyyy-MM-dd')
+    const oneMonthAgo = format(subMonths(new Date(), 1), 'yyyy-MM-dd')
+    const mockResponse = {
+      ticker: 'TSLA',
+      adjusted: true,
+      results: [{ close: 123 }, { close: 123 }, { close: 123 }, { close: 123 }]
+    }
+
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockResponse)
+    } as Response)
+
+    const stock = 'tsla'
+    await getMonthPriceHistory(stock)
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining(`/ticker/TSLA/range/1/day/${oneMonthAgo}/${today}?`)
+    )
+  })
+
+  it('returns null after unsuccessfull data fetch', async () => {
+    vi.mocked(fetch).mockRejectedValue(new Error('Network Error'))
+    const stock = 'TSLA'
+    const stockInfo = await getMonthPriceHistory(stock)
+    expect(stockInfo).toBeNull()
   })
 })
