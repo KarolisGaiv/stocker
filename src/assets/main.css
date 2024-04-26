@@ -14,15 +14,3 @@ a,
   transition: 0.4s;
   padding: 3px;
 }
-
-@media (min-width: var(--breakpoint-desktop)) {
-  body {
-    display: flex;
-  }
-}
-
-@media (min-width: var(--breakpoint-tablet)) {
-  body {
-    padding: 2rem;
-  }
-}

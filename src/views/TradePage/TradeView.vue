@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useToast } from 'vue-toastification'
 import StockChart from './StockChart.vue'
 import {
@@ -10,12 +10,6 @@ import {
 } from '@/api/stock_api'
 import { useUserState } from '@/store/userState'
 import { format } from 'date-fns'
-
-interface StockDetails {
-  name: string
-  ticker: string
-  homepage: string
-}
 
 interface NewsItem {
   title: string
@@ -31,45 +25,45 @@ interface StockHistoricalPriceResponse {
 
 const toast = useToast()
 const userState = useUserState()
+const quantity = ref(0)
 
-const stockName = ref<string>('')
-const stockPrice = ref<number>(0)
-const stockDetails = ref<StockDetails | null>(null)
-const stockNews = ref<NewsItem[]>([])
-const quantity = ref<number>(0)
-const historicalPrices = ref<StockHistoricalPriceResponse | null>(null)
+const stockData = reactive({
+  ticker: '',
+  name: '',
+  price: 0,
+  news: [] as NewsItem[],
+  quantity: 0,
+  historicalPrices: null as StockHistoricalPriceResponse | null,
+  homepage: '',
+  purchase_price: 0,
+  lastUpdated: ''
+})
 
 async function searchStock() {
   try {
-    const priceRes = await getStockPrice(stockName.value)
+    const priceRes = await getStockPrice(stockData.ticker)
     if (!priceRes || !priceRes.results) {
       handleStockError()
       return
     }
-    stockPrice.value = priceRes.results[0].o
+    stockData.price = priceRes.results[0].o
 
-    const infoRes = await getStockInformation(stockName.value)
+    const infoRes = await getStockInformation(stockData.ticker)
     if (!infoRes || !infoRes.results) {
       handleStockError()
       return
     }
 
-    const histPriceRes = await getMonthPriceHistory(stockName.value)
+    const histPriceRes = await getMonthPriceHistory(stockData.ticker)
     if (!histPriceRes || !histPriceRes.results) {
       handleStockError()
       return
     }
-    historicalPrices.value = histPriceRes
-
-    stockDetails.value = {
-      name: infoRes.results.name,
-      ticker: infoRes.results.ticker,
-      homepage: infoRes.results.homepage_url
-    }
+    stockData.historicalPrices = histPriceRes
+    stockData.name = infoRes.results.name
+    stockData.homepage = infoRes.results.homepage_url
   } catch (error) {
     toast.error((error as Error).message || 'An error occurred during the search.')
-  } finally {
-    stockName.value = ''
   }
 }
 
@@ -78,57 +72,44 @@ function handleStockError() {
 }
 
 async function getRelatedStockNews() {
-  if (!stockDetails.value) {
+  if (!stockData.name) {
     handleStockError()
     return
   }
-  const data = await getStockNews(stockDetails.value.ticker)
-  stockNews.value = data.results
+  const newsRes = await getStockNews(stockData.ticker)
+  stockData.news = newsRes?.results || []
 }
 
 async function buyStock() {
-  if (!stockDetails.value || quantity.value <= 0) {
+  if (!stockData || quantity.value <= 0) {
     toast.error('Please check the stock details and quantity')
     return
   }
 
   try {
-    const stockToBuy = {
-      name: stockDetails.value.name,
-      ticker: stockDetails.value.ticker,
-      price: stockPrice.value,
-      purchase_price: stockPrice.value,
-      quantity: quantity.value,
-      lastUpdated: format(new Date(), 'yyyy-MM-dd')
-    }
+    stockData.purchase_price = stockData.price
+    stockData.lastUpdated = format(new Date(), 'yyyy-MM-dd')
 
-    userState.buyStock(quantity.value, stockToBuy)
+    userState.buyStock(quantity.value, stockData)
     toast.success('Purchase successful')
     quantity.value = 0
+    stockData.ticker = ''
   } catch (error) {
     toast.error(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
 }
 
 async function sellStock() {
-  if (!stockDetails.value || quantity.value <= 0) {
+  if (!stockData || quantity.value <= 0) {
     toast.error('Please check the stock details and quantity')
     return
   }
 
   try {
-    const stockToSell = {
-      name: stockDetails.value.name,
-      ticker: stockDetails.value.ticker,
-      price: stockPrice.value,
-      purchase_price: stockPrice.value,
-      quantity: quantity.value,
-      lastUpdated: format(new Date(), 'yyyy-MM-dd')
-    }
-
-    userState.sellStock(quantity.value, stockToSell)
+    userState.sellStock(quantity.value, stockData)
     toast.success('Sale successful')
     quantity.value = 0
+    stockData.ticker = ''
   } catch (error) {
     toast.error(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
@@ -136,7 +117,7 @@ async function sellStock() {
 
 function isInUserPortfolio(ticker: string): boolean {
   if (!ticker) return false
-  return userState.portfolio.some((stock) => stock.ticker === ticker)
+  return userState.portfolio.some((stock) => stock.ticker === ticker.toUpperCase())
 }
 </script>
 
@@ -155,7 +136,7 @@ function isInUserPortfolio(ticker: string): boolean {
           type="text"
           id="stockName"
           placeholder="Enter Company Symbol"
-          v-model="stockName"
+          v-model="stockData.ticker"
           class="stock-name"
           required
         />
@@ -163,31 +144,28 @@ function isInUserPortfolio(ticker: string): boolean {
       </div>
     </form>
 
-    <div class="stock-info-container" v-if="stockDetails" data-test="stock-info-container">
-      <h2>Name: {{ stockDetails.name }}</h2>
+    <div class="stock-info-container" v-if="stockData.name" data-test="stock-info-container">
+      <h2>Name: {{ stockData.name }}</h2>
       <div class="stock-labels-wrapper">
         <span class="stock-info-label"
           >Ticker
-          <span>{{ stockDetails.ticker }}</span>
+          <span>{{ stockData.ticker }}</span>
         </span>
         <span class="stock-info-label"
           >Price
-          <span>USD {{ stockPrice }}</span>
+          <span>USD {{ stockData.price }}</span>
         </span>
-        <a
-          class="stock-info-label stock-homepage-link"
-          :href="stockDetails.homepage"
-          target="_blank"
+        <a class="stock-info-label stock-homepage-link" :href="stockData.homepage" target="_blank"
           >Homepage</a
         >
       </div>
     </div>
 
-    <div v-if="historicalPrices" class="price-graph-container">
-      <StockChart :historicalData="historicalPrices.results" />
+    <div v-if="stockData.historicalPrices" class="price-graph-container">
+      <StockChart :historicalData="stockData.historicalPrices.results" />
     </div>
 
-    <div v-if="historicalPrices" class="trade-action-wrapper">
+    <div v-if="stockData.historicalPrices" class="trade-action-wrapper">
       <label for="quantity">Enter quantity</label>
       <div class="input-group">
         <input type="number" id="quanitity" v-model="quantity" class="stock-quantity" min="0" />
@@ -196,7 +174,7 @@ function isInUserPortfolio(ticker: string): boolean {
       </div>
 
       <div
-        v-if="isInUserPortfolio(stockDetails!.ticker)"
+        v-if="isInUserPortfolio(stockData.ticker)"
         class="portfolio-holdings-wrapper"
         data-test="portfolio-holdings"
       >
@@ -204,24 +182,22 @@ function isInUserPortfolio(ticker: string): boolean {
         <div class="holdings-data">
           <span class="stock-info-label"
             >Quantity
-            <span>{{ userState.getStockFromPortfolio(stockDetails!.ticker)?.quantity }}</span>
+            <span>{{ userState.getStockFromPortfolio(stockData.ticker)?.quantity }}</span>
           </span>
           <span class="stock-info-label"
             >Purchase Price (avg)
-            <span
-              >${{ userState.getStockFromPortfolio(stockDetails!.ticker)?.purchase_price }}</span
-            >
+            <span>${{ userState.getStockFromPortfolio(stockData.ticker)?.purchase_price }}</span>
           </span>
         </div>
       </div>
     </div>
 
-    <button v-if="historicalPrices" @click="getRelatedStockNews" class="news-btn">
+    <button v-if="stockData.historicalPrices" @click="getRelatedStockNews" class="news-btn">
       Related News
     </button>
-    <div class="stock-news" v-if="stockNews.length > 0" data-test="stock-news-container">
+    <div class="stock-news" v-if="stockData.news.length > 0" data-test="stock-news-container">
       <ul>
-        <li v-for="(newsItem, index) in stockNews" :key="index" class="news-card">
+        <li v-for="(newsItem, index) in stockData.news" :key="index" class="news-card">
           <a :href="newsItem.article_url" target="_blank">{{ newsItem.title }}</a>
         </li>
       </ul>
