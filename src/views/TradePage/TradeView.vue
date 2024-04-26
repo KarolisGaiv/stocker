@@ -190,7 +190,7 @@ function isInUserPortfolio(ticker: string): boolean {
     <div v-if="historicalPrices" class="trade-action-wrapper">
       <label for="quantity">Enter quantity</label>
       <div class="input-group">
-        <input type="number" id="quanitity" v-model="quantity" class="stock-quantity" />
+        <input type="number" id="quanitity" v-model="quantity" class="stock-quantity" min="0" />
         <button @click="buyStock" class="buy-btn">Buy</button>
         <button @click="sellStock" class="sell-btn">Sell</button>
       </div>
