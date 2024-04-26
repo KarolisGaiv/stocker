@@ -83,7 +83,7 @@ async function getRelatedStockNews() {
 }
 
 async function buyStock() {
-  if (!stockData || quantity.value <= 0) {
+  if (quantity.value <= 0) {
     toast.error('Please check the stock details and quantity')
     return
   }
@@ -102,7 +102,7 @@ async function buyStock() {
 }
 
 async function sellStock() {
-  if (!stockData || quantity.value <= 0) {
+  if (quantity.value <= 0) {
     toast.error('Please check the stock details and quantity')
     return
   }
