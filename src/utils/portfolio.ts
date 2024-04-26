@@ -1,11 +1,4 @@
-interface Stock {
-  ticker: string
-  name: string
-  price: number
-  purchase_price: number
-  lastUpdated: string
-  quantity: number
-}
+import type { Stock } from '@/models/stock.types'
 
 /**
  * Calculates the total invested amount for a single stock or an array of stocks.

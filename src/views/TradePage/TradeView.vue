@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useToast } from 'vue-toastification'
+import type { NewsItem, StockHistoricalPriceResponse } from '@/models/stock.types'
 import StockChart from './StockChart.vue'
 import {
   getStockPrice,
@@ -10,18 +11,6 @@ import {
 } from '@/api/stock_api'
 import { useUserState } from '@/store/userState'
 import { format } from 'date-fns'
-
-interface NewsItem {
-  title: string
-  author: string
-  article_url: string
-}
-
-interface StockHistoricalPriceResponse {
-  results: {
-    o: number
-  }[]
-}
 
 const toast = useToast()
 const userState = useUserState()

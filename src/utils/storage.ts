@@ -1,16 +1,4 @@
-interface User {
-  balance: number
-  portfolio: Stock[]
-}
-
-interface Stock {
-  ticker: string
-  name: string
-  price: number
-  purchase_price: number
-  lastUpdated: string
-  quantity: number
-}
+import type { User } from '@/models/user.types'
 
 export const storageService = {
   getUser(): User {

@@ -1,24 +1,12 @@
 import { defineStore } from 'pinia'
+import type { User } from '@/models/user.types'
+import type { Stock } from '@/models/stock.types'
 import { storageService } from '@/utils/storage'
 import { getStockPrice } from '@/api/stock_api'
 import { format } from 'date-fns'
 import { useToast } from 'vue-toastification'
 
 const MAX_PORTFOLIO_SIZE = 5
-
-interface User {
-  balance: number
-  portfolio: Stock[]
-}
-
-interface Stock {
-  ticker: string
-  name: string
-  price: number
-  purchase_price: number
-  lastUpdated: string
-  quantity: number
-}
 
 const toast = useToast()
 
