@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useUserState } from './userState'
 import { format, subDays } from 'date-fns'
+import { storageService } from '@/utils/storage'
+
 import * as stock_api from '../api/stock_api'
 
 const stockFixture = {
@@ -294,6 +296,29 @@ describe('userState', () => {
       const result = userStore.getStockFromPortfolio(tickerToFind)
 
       expect(result).toEqual(stockFixture)
+    })
+  })
+
+  describe('userState - loadUser method', () => {
+    beforeEach(() => {
+      vi.spyOn(storageService, 'getUser').mockReturnValue({
+        balance: 100,
+        portfolio: [stockFixture]
+      })
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('should load user data if storage returns a user', () => {
+      expect(userStore.balance).toBe(0)
+      expect(userStore.portfolio.length).toBe(0)
+
+      userStore.loadUser()
+
+      expect(userStore.balance).toBe(100)
+      expect(userStore.portfolio).toContainEqual(stockFixture)
     })
   })
 })
