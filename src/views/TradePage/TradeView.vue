@@ -25,6 +25,7 @@ interface StockHistoricalPriceResponse {
 
 const toast = useToast()
 const userState = useUserState()
+const searchedTicker = ref('')
 const quantity = ref(0)
 
 const stockData = reactive({
@@ -41,25 +42,26 @@ const stockData = reactive({
 
 async function searchStock() {
   try {
-    const priceRes = await getStockPrice(stockData.ticker)
+    const priceRes = await getStockPrice(searchedTicker.value)
     if (!priceRes || !priceRes.results) {
       handleStockError()
       return
     }
     stockData.price = priceRes.results[0].o
 
-    const infoRes = await getStockInformation(stockData.ticker)
+    const infoRes = await getStockInformation(searchedTicker.value)
     if (!infoRes || !infoRes.results) {
       handleStockError()
       return
     }
 
-    const histPriceRes = await getMonthPriceHistory(stockData.ticker)
+    const histPriceRes = await getMonthPriceHistory(searchedTicker.value)
     if (!histPriceRes || !histPriceRes.results) {
       handleStockError()
       return
     }
     stockData.historicalPrices = histPriceRes
+    stockData.ticker = infoRes.results.ticker
     stockData.name = infoRes.results.name
     stockData.homepage = infoRes.results.homepage_url
   } catch (error) {
@@ -76,7 +78,7 @@ async function getRelatedStockNews() {
     handleStockError()
     return
   }
-  const newsRes = await getStockNews(stockData.ticker)
+  const newsRes = await getStockNews(searchedTicker.value)
   stockData.news = newsRes?.results || []
 }
 
@@ -93,7 +95,7 @@ async function buyStock() {
     userState.buyStock(quantity.value, stockData)
     toast.success('Purchase successful')
     quantity.value = 0
-    stockData.ticker = ''
+    searchedTicker.value = ''
   } catch (error) {
     toast.error(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
@@ -109,15 +111,14 @@ async function sellStock() {
     userState.sellStock(quantity.value, stockData)
     toast.success('Sale successful')
     quantity.value = 0
-    stockData.ticker = ''
+    searchedTicker.value = ''
   } catch (error) {
     toast.error(`Error: ${(error as Error).message || 'An error occurred during the transaction'}`)
   }
 }
 
 function isInUserPortfolio(ticker: string): boolean {
-  if (!ticker) return false
-  return userState.portfolio.some((stock) => stock.ticker === ticker.toUpperCase())
+  return userState.portfolio.some((stock) => stock.ticker === ticker)
 }
 </script>
 
@@ -136,7 +137,7 @@ function isInUserPortfolio(ticker: string): boolean {
           type="text"
           id="stockName"
           placeholder="Enter Company Symbol"
-          v-model="stockData.ticker"
+          v-model="searchedTicker"
           class="stock-name"
           required
         />
