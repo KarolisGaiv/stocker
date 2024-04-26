@@ -122,8 +122,8 @@ test('show portfolio pie chart after filling portfolio', async ({ page }) => {
   await page.getByPlaceholder('Enter Company Symbol').click()
   await page.getByPlaceholder('Enter Company Symbol').fill('aapl')
   await page.getByRole('button', { name: 'Search' }).click()
-  await page.locator('#quanitity').click()
-  await page.locator('#quanitity').fill('05')
+  await page.locator('#quantity').click()
+  await page.locator('#quantity').fill('05')
   await page.getByRole('button', { name: 'Buy' }).click()
   await page.getByRole('button', { name: 'Stocky App logo' }).click()
 
