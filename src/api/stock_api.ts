@@ -82,4 +82,4 @@ async function handleAPIResponse(response: Response) {
   return await response.json()
 }
 
-export { getStockPrice, getStockInformation, getStockNews, getMonthPriceHistory }
+export { getStockPrice, getStockInformation, getStockNews, getMonthPriceHistory, handleAPIResponse }

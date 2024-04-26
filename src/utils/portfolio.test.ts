@@ -114,6 +114,13 @@ describe('calculatePortfolioReturn function', () => {
     const calculatedReturn = calculatePortfolioReturn(currentValue, investedValue)
     expect(calculatedReturn).toBe(expectedReturn)
   })
+
+  it('returns 0 if portfolio has no holdings', () => {
+    const investedValue = 0
+    const currentValue = 1000
+    const calculatedReturn = calculatePortfolioReturn(currentValue, investedValue)
+    expect(calculatedReturn).toBe(0)
+  })
 })
 
 describe('calculateStockPercentageOfPortfolio', () => {

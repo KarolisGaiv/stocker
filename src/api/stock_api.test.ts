@@ -1,4 +1,10 @@
-import { getStockPrice, getStockInformation, getStockNews, getMonthPriceHistory } from './stock_api'
+import {
+  getStockPrice,
+  getStockInformation,
+  getStockNews,
+  getMonthPriceHistory,
+  handleAPIResponse
+} from './stock_api'
 import { describe, expect, vi, it } from 'vitest'
 import { format, subMonths } from 'date-fns'
 
