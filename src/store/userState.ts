@@ -69,18 +69,12 @@ export const useUserState = defineStore('user', {
 
       // if stock exists in portfolio, update quantity and purchase price
       if (existingStockIndex !== -1) {
-        this.updateExistingStock(
-          orderInfo.ticker,
-          orderInfo.price,
-          orderQuantity,
-          orderInfo.lastUpdated
-        )
+        this.updateExistingStock(orderQuantity, orderInfo)
       } else {
         // if stock does not exist and portfolio is at max size, throw error
         if (this.portfolio.length === MAX_PORTFOLIO_SIZE) {
           throw new Error(`Cannot have more than ${MAX_PORTFOLIO_SIZE} stocks in portfolio`)
         }
-
         // if stock does not exist, add to portfolio
         this.addNewStock(orderQuantity, orderInfo)
       }
@@ -89,6 +83,43 @@ export const useUserState = defineStore('user', {
       this.balance = parseFloat(this.balance.toFixed(2))
 
       this.updateUser({ balance: this.balance, portfolio: this.portfolio })
+    },
+
+    findStockIndex(ticker: string) {
+      return this.portfolio.findIndex((stock) => stock.ticker === ticker.toUpperCase())
+    },
+
+    updateExistingStock(orderQuantity: number, orderInfo: Stock) {
+      const existingStockPosition = this.getStockFromPortfolio(orderInfo.ticker)
+
+      if (!existingStockPosition) {
+        throw new Error(`Expected stock with ticker ${orderInfo.ticker} to be in the portfolio`)
+      }
+
+      const oldTotalCost = existingStockPosition.purchase_price * existingStockPosition.quantity
+      const newTotalCost = oldTotalCost + orderInfo.price * orderQuantity
+      existingStockPosition.quantity += orderQuantity
+
+      existingStockPosition.purchase_price = parseFloat(
+        (newTotalCost / existingStockPosition.quantity).toFixed(2)
+      )
+      existingStockPosition.lastUpdated = orderInfo.lastUpdated
+    },
+
+    addNewStock(orderQuantity: number, orderInfo: Stock) {
+      const trade = {
+        name: orderInfo.name,
+        ticker: orderInfo.ticker,
+        price: orderInfo.price,
+        purchase_price: orderInfo.price,
+        quantity: orderQuantity,
+        lastUpdated: orderInfo.lastUpdated
+      }
+      this.portfolio.push(trade)
+    },
+
+    getStockFromPortfolio(ticker: string) {
+      return this.portfolio.find((stock) => stock.ticker === ticker.toUpperCase())
     },
 
     sellStock(orderQuantity: number, orderInfo: Stock) {
@@ -139,50 +170,6 @@ export const useUserState = defineStore('user', {
       if (updated) {
         this.updateUser({ portfolio: this.portfolio })
       }
-    },
-
-    findStockIndex(ticker: string) {
-      return this.portfolio.findIndex((stock) => stock.ticker === ticker.toUpperCase())
-    },
-
-    updateExistingStock(
-      ticker: string,
-      orderPrice: number,
-      orderQuantity: number,
-      updateDate: string
-    ) {
-      const existingStockPosition = this.getStockFromPortfolio(ticker)
-
-      if (!existingStockPosition) {
-        throw new Error(
-          `Invariant failed: expected stock with ticker ${ticker} to be in the portfolio`
-        )
-      }
-
-      const oldTotalCost = existingStockPosition.purchase_price * existingStockPosition.quantity
-      const newTotalCost = oldTotalCost + orderPrice * orderQuantity
-      existingStockPosition.quantity += orderQuantity
-
-      existingStockPosition.purchase_price = parseFloat(
-        (newTotalCost / existingStockPosition.quantity).toFixed(2)
-      )
-      existingStockPosition.lastUpdated = updateDate
-    },
-
-    addNewStock(orderQuantity: number, orderInfo: Stock) {
-      const trade = {
-        name: orderInfo.name,
-        ticker: orderInfo.ticker,
-        price: orderInfo.price,
-        purchase_price: orderInfo.price,
-        quantity: orderQuantity,
-        lastUpdated: orderInfo.lastUpdated
-      }
-      this.portfolio.push(trade)
-    },
-
-    getStockFromPortfolio(ticker: string) {
-      return this.portfolio.find((stock) => stock.ticker === ticker.toUpperCase())
     }
   }
 })
