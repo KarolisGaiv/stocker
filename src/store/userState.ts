@@ -123,9 +123,7 @@ export const useUserState = defineStore('user', {
     },
 
     sellStock(orderQuantity: number, orderInfo: Stock) {
-      const existingStockIndex = this.portfolio.findIndex(
-        (stock) => stock.ticker === orderInfo.ticker
-      )
+      const existingStockIndex = this.findStockIndex(orderInfo.ticker)
 
       if (existingStockIndex === -1) {
         throw new Error('Stock not found in portfolio')
