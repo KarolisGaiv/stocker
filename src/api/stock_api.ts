@@ -12,34 +12,31 @@ async function getStockPrice(stock: string) {
     )
     return handleAPIResponse(response)
   } catch (error) {
-    toast.error('Network error or service unavailable')
-    return null
+    handleError('Failed to fetch stock prices')
   }
 }
 
 async function getStockInformation(stock: string) {
   stock = stock.toUpperCase()
   try {
-    const res = await fetch(
+    const response = await fetch(
       `https://api.polygon.io/v3/reference/tickers/${stock}?apiKey=${api_key}`
     )
-    return res.json()
+    return handleAPIResponse(response)
   } catch (error) {
-    toast.error('Network error or service unavailable')
-    return null
+    handleError('Failed to fetch stock information')
   }
 }
 
 async function getStockNews(stock: string) {
   stock = stock.toUpperCase()
   try {
-    const res = await fetch(
+    const response = await fetch(
       `https://api.polygon.io/v2/reference/news?ticker=${stock}&apiKey=${api_key}`
     )
-    return res.json()
+    return handleAPIResponse(response)
   } catch (error) {
-    toast.error('Network error or service unavailable')
-    return null
+    handleError('Failed to fetch stock news')
   }
 }
 
@@ -49,37 +46,33 @@ async function getMonthPriceHistory(stock: string) {
   const from = format(subMonths(new Date(), 1), 'yyyy-MM-dd')
 
   try {
-    const res =
-      await fetch(`https://api.polygon.io/v2/aggs/ticker/${stock}/range/1/day/${from}/${today}?adjusted=true&sort=asc&limit=120&apiKey=${api_key}
-    `)
-    return res.json()
+    const response = await fetch(
+      `https://api.polygon.io/v2/aggs/ticker/${stock}/range/1/day/${from}/${today}?adjusted=true&sort=asc&limit=120&apiKey=${api_key}`
+    )
+    return handleAPIResponse(response)
   } catch (error) {
-    toast.error('Network error or service unavailable')
-    return null
+    handleError('Failed to fetch price history')
   }
 }
 
 async function handleAPIResponse(response: Response) {
   if (!response.ok) {
     const errData = await response.json()
-
     let errorMessage = 'An unexpected error occured'
-    if (errData.status) {
-      switch (errData.status) {
-        case 'NOT_FOUND':
-          errorMessage = 'Ticker not found'
-          break
-        case 'ERROR':
-          errorMessage = errData.error || 'An error occured'
-          break
-        default:
-          errorMessage = errData.message || errorMessage
-      }
+
+    if (errData.error) {
+      errorMessage = errData.error
+    } else if (errData.message) {
+      errorMessage = errData.message
     }
-    toast.error(errorMessage)
-    return null
+    throw new Error(errorMessage)
   }
   return await response.json()
 }
 
-export { getStockPrice, getStockInformation, getStockNews, getMonthPriceHistory, handleAPIResponse }
+function handleError(message: string) {
+  toast.error(message)
+  throw new Error(message)
+}
+
+export { getStockPrice, getStockInformation, getStockNews, getMonthPriceHistory }

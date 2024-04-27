@@ -31,44 +31,25 @@ const stockData = reactive({
 
 async function searchStock() {
   try {
-    const priceRes = await getStockPrice(searchedTicker.value)
-    if (!priceRes || !priceRes.results) {
-      handleStockError()
-      return
-    }
-    stockData.price = priceRes.results[0].o
-
+    stockData.price = (await getStockPrice(searchedTicker.value)).results[0].o
     const infoRes = await getStockInformation(searchedTicker.value)
-    if (!infoRes || !infoRes.results) {
-      handleStockError()
-      return
-    }
+    stockData.historicalPrices = await getMonthPriceHistory(searchedTicker.value)
 
-    const histPriceRes = await getMonthPriceHistory(searchedTicker.value)
-    if (!histPriceRes || !histPriceRes.results) {
-      handleStockError()
-      return
-    }
-    stockData.historicalPrices = histPriceRes
     stockData.ticker = infoRes.results.ticker
     stockData.name = infoRes.results.name
     stockData.homepage = infoRes.results.homepage_url
   } catch (error) {
-    toast.error((error as Error).message || 'An error occurred during the search.')
+    toast.error((error as Error).message)
   }
-}
-
-function handleStockError() {
-  toast.error('Stock information is currently unavailable')
 }
 
 async function getRelatedStockNews() {
-  if (!stockData.name) {
-    handleStockError()
-    return
+  try {
+    const newsRes = await getStockNews(searchedTicker.value)
+    stockData.news = newsRes.results
+  } catch (error) {
+    toast.error((error as Error).message)
   }
-  const newsRes = await getStockNews(searchedTicker.value)
-  stockData.news = newsRes?.results || []
 }
 
 async function buyStock() {

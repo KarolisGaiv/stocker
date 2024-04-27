@@ -1,10 +1,4 @@
-import {
-  getStockPrice,
-  getStockInformation,
-  getStockNews,
-  getMonthPriceHistory,
-  handleAPIResponse
-} from './stock_api'
+import { getStockPrice, getStockInformation, getStockNews, getMonthPriceHistory } from './stock_api'
 import { describe, expect, vi, it } from 'vitest'
 import { format, subMonths } from 'date-fns'
 
@@ -36,11 +30,10 @@ describe('getStockPrice function ', () => {
     )
   })
 
-  it('returns null after unsuccessfull data fetch', async () => {
+  it('throws error after unsuccessfull data fetch', async () => {
     vi.mocked(fetch).mockRejectedValue(new Error('API Error'))
     const stock = 'MCKD'
-    const stockData = await getStockPrice(stock)
-    expect(stockData).toBe(null)
+    await expect(getStockPrice(stock)).rejects.toThrow()
   })
 
   it('converts stock ticker to upper case in fetch request', async () => {
@@ -77,11 +70,10 @@ describe('getStockInformation function', () => {
     expect(fetch).toHaveBeenCalledWith(expect.stringContaining(`/reference/tickers/${stock}`))
   })
 
-  it('returns null after unsuccessfull data fetch', async () => {
+  it('throws error after unsuccessfull data fetch', async () => {
     vi.mocked(fetch).mockRejectedValue(new Error('Network Error'))
     const stock = 'TSLA'
-    const stockInfo = await getStockInformation(stock)
-    expect(stockInfo).toBeNull()
+    await expect(getStockPrice(stock)).rejects.toThrow()
   })
 
   it('converts stock ticker to upper case in fetch request', async () => {
@@ -118,11 +110,10 @@ describe('getStockNews function', () => {
     expect(fetch).toHaveBeenCalledWith(expect.stringContaining(`/reference/news?ticker=${stock}&`))
   })
 
-  it('returns null after unsuccessfull data fetch', async () => {
+  it('throws error after unsuccessfull data fetch', async () => {
     vi.mocked(fetch).mockRejectedValue(new Error('Network Error'))
     const stock = 'TSLA'
-    const stockInfo = await getStockNews(stock)
-    expect(stockInfo).toBeNull()
+    await expect(getStockPrice(stock)).rejects.toThrow()
   })
 
   it('converts stock ticker to upper case in fetch request', async () => {
@@ -164,10 +155,9 @@ describe('getMonthPriceHistory function', () => {
     )
   })
 
-  it('returns null after unsuccessfull data fetch', async () => {
+  it('throws error after unsuccessfull data fetch', async () => {
     vi.mocked(fetch).mockRejectedValue(new Error('Network Error'))
     const stock = 'TSLA'
-    const stockInfo = await getMonthPriceHistory(stock)
-    expect(stockInfo).toBeNull()
+    await expect(getStockPrice(stock)).rejects.toThrow()
   })
 })
