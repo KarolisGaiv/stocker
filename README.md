@@ -4,7 +4,7 @@ This is a stock portfolio management application built with Vue 3. It allows use
 
 ## Important Setup Instructions
 
-**_1. To run App, use this API-KEY "EQghLZcO2RBlLKLKSPfMrPqaEBUqQT8p" or please contact owner for API key or you can create one at [Polygon.io](https://polygon.io/)._**  
+**_1. To run App, please contact owner for API key or you can create one at [Polygon.io](https://polygon.io/)._**  
 **_2. Update the `example.env` file with your API key - replace `API KEY GOES HERE WITHOUT QUOTE SYMBOLS` with your actual API key (do not use quotes)._**  
 **_3. Change `example.env` file to `.env`._**  
 **_4. Due to API limitations, the stock portfolio is currently limited to 5 stock holdings._**
